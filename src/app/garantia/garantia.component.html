@@ -1,0 +1,99 @@
+<mat-horizontal-stepper linear>
+  <mat-step [stepControl]="garantiaForm">
+    <form [formGroup]="garantiaForm">
+      <h2>Por favor, Informe o nome e o número de série do produto que deseja acionar a Garantia</h2>
+      <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" required>
+        <mat-error *ngIf="garantiaForm.controls['nome'].hasError('required')">Campo obrigatório</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Série</mat-label>
+        <input matInput formControlName="serie" required>
+        <mat-error *ngIf="garantiaForm.controls['serie'].hasError('required')">Campo obrigatório</mat-error>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperNext>Enviar</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="garantiaForm2">
+    <form [formGroup]="garantiaForm2">
+      <h2>Faça uma descrição detalhada do problema apresentado</h2>
+      <mat-form-field>
+        <mat-label>Mensagem</mat-label>
+        <textarea matInput formControlName="mensagem" required></textarea>
+        <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperNext>Enviar</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="garantiaForm3">
+    <form [formGroup]="garantiaForm3">
+      <h2>Informe a data de compra do produto</h2>
+      <mat-form-field>
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dataCompra">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperNext>Enviar</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="garantiaForm4">
+    <form [formGroup]="garantiaForm4">
+      <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
+      <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+      <div class="dropzone">
+        <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)"/>
+        <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+        <h3>Solte arquivo para fazer</h3>
+        <h3>upload ou <label for="fileDropRef">procurar</label></h3>
+      </div>
+      <div>
+        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperNext>Enviar</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="garantiaForm5">
+    <form [formGroup]="garantiaForm5">
+      <h2>Por favor, envie uma foto da Nota Fiscal do Produto</h2>
+      <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+      <div class="dropzone">
+        <input type="file" #fileDropRef id="fileDropRef" />
+        <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+        <h3>Solte arquivo para fazer</h3>
+        <h3>upload ou <label for="fileDropRef">procurar</label></h3>
+      </div>
+      <div>
+        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperNext>Enviar</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="garantiaForm6">
+    <form [formGroup]="garantiaForm6">
+      <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
+      <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+      <div class="dropzone">
+        <input type="file" #fileDropRef id="fileDropRef" />
+        <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+        <h3>Solte arquivo para fazer</h3>
+        <h3>upload ou <label for="fileDropRef">procurar</label></h3>
+      </div>
+      <div>
+        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperNext>Enviar</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>
