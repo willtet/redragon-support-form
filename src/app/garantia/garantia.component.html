@@ -50,46 +50,58 @@
   </mat-step>
   <mat-step [stepControl]="garantiaForm4">
     <form [formGroup]="garantiaForm4">
-      <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
-      <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
-      <div class="dropzone">
-        <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)"/>
-        <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-        <h3>Solte arquivo para fazer</h3>
-        <h3>upload ou <label for="fileDropRef">procurar</label></h3>
+      <ng-template matStepLabel>Formulário A - Etapa 2</ng-template>
+      <p>Arraste e solte o arquivo aqui ou clique para selecionar o arquivo:</p>
+      <ngx-file-drop
+        (onFileDrop)="onFileDropped($event)"
+        (onFileOver)="fileOver($event)"
+        (onFileLeave)="fileLeave($event)">
+        <ng-template ngx-file-drop-content-tmp>
+          <div class="file-drop-content">
+            <p>Solte os arquivos aqui</p>
+          </div>
+        </ng-template>
+      </ngx-file-drop>
+      <div *ngIf="file">
+        <p>Arquivo selecionado: {{ file.name }}</p>
       </div>
       <div>
-        <button mat-button matStepperNext>Voltar</button>
-        <button mat-button matStepperNext>Enviar</button>
+        <button mat-button matStepperPrevious>Anterior</button>
+        <button mat-button matStepperNext>Próximo</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="garantiaForm5">
-    <form [formGroup]="garantiaForm5">
-      <h2>Por favor, envie uma foto da Nota Fiscal do Produto</h2>
-      <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
-      <div class="dropzone">
-        <input type="file" #fileDropRef id="fileDropRef" />
-        <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-        <h3>Solte arquivo para fazer</h3>
-        <h3>upload ou <label for="fileDropRef">procurar</label></h3>
+    <form [formGroup]="garantiaForm4">
+      <ng-template matStepLabel>Formulário A - Etapa 2</ng-template>
+      <p>Arraste e solte o arquivo aqui ou clique para selecionar o arquivo:</p>
+      <ngx-file-drop
+        (onFileDrop)="onFileDropped($event)"
+        (onFileOver)="fileOver($event)"
+        (onFileLeave)="fileLeave($event)">
+        <ng-template ngx-file-drop-content-tmp>
+          <div class="file-drop-content">
+            <p>Solte os arquivos aqui</p>
+          </div>
+        </ng-template>
+      </ngx-file-drop>
+      <div *ngIf="file">
+        <p>Arquivo selecionado: {{ file.name }}</p>
       </div>
       <div>
-        <button mat-button matStepperNext>Voltar</button>
-        <button mat-button matStepperNext>Enviar</button>
+        <button mat-button matStepperPrevious>Anterior</button>
+        <button mat-button matStepperNext>Próximo</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="garantiaForm6">
-    <form [formGroup]="garantiaForm6">
-      <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
-      <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
-      <div class="dropzone">
-        <input type="file" #fileDropRef id="fileDropRef" />
-        <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-        <h3>Solte arquivo para fazer</h3>
-        <h3>upload ou <label for="fileDropRef">procurar</label></h3>
-      </div>
+    <form [formGroup]="garantiaForm2">
+      <h2>Faça uma descrição detalhada do problema apresentado</h2>
+      <mat-form-field>
+        <mat-label>Mensagem</mat-label>
+        <textarea matInput formControlName="mensagem" required></textarea>
+        <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+      </mat-form-field>
       <div>
         <button mat-button matStepperNext>Voltar</button>
         <button mat-button matStepperNext>Enviar</button>

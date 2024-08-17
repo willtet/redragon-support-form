@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import { CommonModule } from '@angular/common';
+import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 
 @Component({
   selector: 'app-garantia',
@@ -20,7 +21,8 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    CommonModule
+    CommonModule,
+    NgxFileDropModule
   ],
   templateUrl: './garantia.component.html',
   styleUrl: './garantia.component.css',
@@ -28,79 +30,33 @@ import { CommonModule } from '@angular/common';
 })
 export class GarantiaComponent {
 
-  files: any[] = [] ;
+  previousFormData: any;
+  file: File | null = null;
 
-  /**
-   * on file drop handler
-   */
-  onFileDropped($event: any) {
-    this.prepareFilesList($event);
-  }
-
-  /**
-   * handle file from browsing
-   */
-  fileBrowseHandler(files: any | null) {
-    this.prepareFilesList(files);
-  }
-
-  /**
-   * Delete file from files list
-   * @param index (File index)
-   */
-  deleteFile(index: number) {
-    this.files.splice(index, 1);
-  }
-
-  /**
-   * Simulate the upload process
-   */
-  uploadFilesSimulator(index: number) {
-    setTimeout(() => {
-      if (index === this.files.length) {
-        return;
+  public onFileDropped(files: NgxFileDropEntry[]) {
+    for (const droppedFile of files) {
+      // Verifica se é um arquivo
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          // Aqui você pode acessar o arquivo e armazená-lo em uma variável
+          this.file = file;
+          console.log(file);
+        });
       } else {
-        const progressInterval = setInterval(() => {
-          if (this.files[index].progress === 100) {
-            clearInterval(progressInterval);
-            this.uploadFilesSimulator(index + 1);
-          } else {
-            this.files[index].progress += 5;
-          }
-        }, 200);
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log('Dropped file is a directory', fileEntry);
       }
-    }, 1000);
-  }
-
-  /**
-   * Convert Files list to normal array list
-   * @param files (Files List)
-   */
-  prepareFilesList(files: Array<any>) {
-    for (const item of files) {
-      item.progress = 0;
-      this.files.push(item);
     }
-    this.uploadFilesSimulator(0);
   }
 
-  /**
-   * format bytes
-   * @param bytes (File size in bytes)
-   * @param decimals (Decimals point)
-   */
-  formatBytes(bytes: any, decimals: any) {
-    if (bytes === 0) {
-      return '0 Bytes';
-    }
-    const k = 1024;
-    const dm = decimals <= 0 ? 0 : decimals || 2;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  public fileOver(event: any) {
+    console.log('Arquivo sobre a área de drop:', event);
   }
 
-
+  public fileLeave(event: any) {
+    console.log('Arquivo saiu da área de drop:', event);
+  }
 
 
 
@@ -124,11 +80,11 @@ export class GarantiaComponent {
   });
 
   garantiaForm5 = this._formBuilder.group({
-    file: [this.files, Validators.required]
+    file: ['']
   });
 
   garantiaForm6 = this._formBuilder.group({
-    file: this.files
+    file: ['', Validators.required]
   });
 
 
