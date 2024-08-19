@@ -57,7 +57,7 @@ export class StepperComponent {
 
   goToForm(form: string) {
     this.selectedForm = form;
-    this.firstFormGroup;
+    console.log(this.firstFormGroup);
     this.stepper.next();
   }
 

@@ -16,6 +16,6 @@ export class HomeComponent  implements OnInit{
   }
 
   startStepper(): void {
-    this.router.navigate(['parent']);
+    this.router.navigate(['formulario']);
   }
 }

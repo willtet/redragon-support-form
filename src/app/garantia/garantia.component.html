@@ -13,7 +13,7 @@
         <mat-error *ngIf="garantiaForm.controls['serie'].hasError('required')">Campo obrigatório</mat-error>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button (click)="goBack()">Voltar</button>
         <button mat-button matStepperNext>Enviar</button>
       </div>
     </form>
@@ -27,7 +27,7 @@
         <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperPrevious>Voltar</button>
         <button mat-button matStepperNext>Enviar</button>
       </div>
     </form>
@@ -43,7 +43,7 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperPrevious>Voltar</button>
         <button mat-button matStepperNext>Enviar</button>
       </div>
     </form>
@@ -103,7 +103,7 @@
         <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Voltar</button>
+        <button mat-button matStepperPrevious>Voltar</button>
         <button mat-button matStepperNext>Enviar</button>
       </div>
     </form>

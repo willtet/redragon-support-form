@@ -10,7 +10,7 @@ export const routes: Routes = [
   { component: HomeComponent, path: "home" },
   {
     component: ParentComponent,
-    path: "parent",
+    path: "formulario",
     children: [
       { path: "", redirectTo: "inicio", pathMatch: "full" },
       { component: InicioComponent, path: "inicio" },

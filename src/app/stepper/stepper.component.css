@@ -9,3 +9,123 @@
 .mat-mdc-form-field {
   margin-top: 16px;
 }
+
+.step_container_d{
+  display: flex;
+  flex-direction: row;
+
+}
+
+
+.step_container_d > *{
+  width: 50%;
+}
+
+.step_container_d__ex{
+  display: flex;
+  justify-content: center;
+
+}
+
+.step_container_d__ex__ch{
+  width: 50%;
+}
+
+.step_container_d__ex__ch h2{
+  margin-top: 0;
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 78.02px;
+  text-align: left;
+
+}
+
+.step_container_d__ex__ch p{
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 26.82px;
+  text-align: justify;
+
+}
+
+.step_container_form{
+  display: flex;
+  flex-direction: column;
+  width: 35% !important;
+  padding: 2%;
+}
+
+.step_container_options{
+  margin: auto;
+  width: 70%;
+  text-align: center;
+}
+
+.step_container_options > *{
+  margin-bottom: 5%;
+}
+
+.step_container_options h1{
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 58.51px;
+
+}
+
+.step_container_options__buttons{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.step_container_options__buttons > *{
+  text-align: left;
+  width: 451px;
+  height: 79px;
+  border-radius: 16px;
+  border: 2px solid black;
+  opacity: 0px;
+
+}
+
+.step_container_options__back button{
+  width: 162.25px;
+  height: 54px;
+  gap: 0px;
+  border-radius: 17px;
+  border: 2px solid red;
+  opacity: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21.94px;
+  text-align: center;
+  background-color: white;
+  color: red;
+}
+
+.step_container_options__back button:hover{
+  background-color: red;
+  color: white;
+}
+
+
+.bt_f{
+  text-align: end;
+}
+
+
+.bt_f__index{
+  width: 150px;
+  height: 47px;
+  gap: 0px;
+  border-radius: 12px;
+  color: #fff !important;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 36px;
+  text-align: center;
+  border:none;
+  background-color: #FF0000;
+}

@@ -1,35 +1,45 @@
 <mat-horizontal-stepper linear #stepper>
-  <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup">
-      <mat-form-field>
-        <mat-label>Name Completo</mat-label>
-        <input matInput placeholder="Nome Completo" formControlName="nomeCompleto" required>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>E-mail</mat-label>
-        <input matInput placeholder="E-mail" formControlName="email" required>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Telefone</mat-label>
-        <input matInput placeholder="Telefone" formControlName="telefone" required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperNext>Próximo</button>
+  <mat-step  [stepControl]="firstFormGroup">
+    <div class="step_container_d">
+      <div class="step_container_d__ex">
+        <div class="step_container_d__ex__ch">
+          <h2>Preencha suas informações ao lado</h2>
+          <p>A Redragon está comprometida em tornar o suporte ao cliente mais acessível e eficiente.  Conte conosco para ajudá-lo a resolver qualquer questão rapidamente.</p>
+        </div>
       </div>
-    </form>
+      <form class="step_container_form" [formGroup]="firstFormGroup">
+        <mat-form-field>
+          <mat-label>Nome Completo</mat-label>
+          <input matInput type="text" placeholder="Nome Completo" formControlName="nomeCompleto" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" placeholder="E-mail" formControlName="email" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Telefone</mat-label>
+          <input matInput type="text" placeholder="Telefone" formControlName="telefone" required>
+        </mat-form-field>
+        <div class="bt_f">
+          <button class="bt_f__index" mat-button matStepperNext>Enviar </button>
+        </div>
+      </form>
+    </div>
   </mat-step>
   <mat-step>
-    <div>
+    <div class="step_container_options">
       <h1>Selecione a opção abaixo</h1>
-      <div>
+      <div class="step_container_options__buttons">
         <button mat-button (click)="goToForm('garantia')">Garantia</button>
-        <button mat-button (click)="goToForm('assistencia')">Dúvidas e Assistências</button>
-        <button mat-button (click)="goToForm('revenda')">Revenda</button>
         <button mat-button (click)="goToForm('software')">Software</button>
+        <button mat-button (click)="goToForm('assistencia')">Dúvidas e Assistências</button>
         <button mat-button (click)="goToForm('parcerias')">Parcerias</button>
+        <button mat-button (click)="goToForm('revenda')">Revenda</button>
         <button mat-button (click)="goToForm('outros')">Outros</button>
       </div>
-      <button matStepperPrevious>Voltar</button>
+      <div class="step_container_options__back">
+        <button matStepperPrevious>Voltar</button>
+      </div>
     </div>
   </mat-step>
   <mat-step *ngIf="selectedForm === 'garantia'" [stepControl]="secondFormGroupA">

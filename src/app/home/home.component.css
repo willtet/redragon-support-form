@@ -1,0 +1,39 @@
+.enter{
+  width: 50rem;
+  margin: auto;
+}
+
+h1{
+  font-weight: 600;
+  font-size: 96px;
+  line-height: 117px;
+  text-align: center;
+}
+
+p{
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+}
+
+.container_c{
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+}
+
+.bt_f{
+  width: 181px;
+  height: 57px;
+  gap: 0px;
+  border-radius: 30px;
+  color: #fff;
+  font-family: Poppins;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 36px;
+  text-align: center;
+  border:none;
+  background-color: #FF0000;
+}

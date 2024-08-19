@@ -7,7 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location  } from '@angular/common';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 
 @Component({
@@ -32,6 +32,10 @@ export class GarantiaComponent {
 
   previousFormData: any;
   file: File | null = null;
+
+  goBack(): void {
+    window.history.back();
+  }
 
   public onFileDropped(files: NgxFileDropEntry[]) {
     for (const droppedFile of files) {
@@ -76,7 +80,7 @@ export class GarantiaComponent {
   });
 
   garantiaForm4 = this._formBuilder.group({
-    dataCompra: ['', Validators.required]
+    file: ['']
   });
 
   garantiaForm5 = this._formBuilder.group({
@@ -94,5 +98,5 @@ export class GarantiaComponent {
 
 
 
-  constructor(private _formBuilder: FormBuilder, private route:ActivatedRoute, private router:Router) {}
+  constructor(private _formBuilder: FormBuilder, private route:ActivatedRoute, private router:Router, private location: Location) {}
 }
