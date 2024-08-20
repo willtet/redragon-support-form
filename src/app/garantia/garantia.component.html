@@ -46,42 +46,58 @@
     </div>
   </mat-step>
   <mat-step [stepControl]="garantiaForm3">
-    <form [formGroup]="garantiaForm3">
-      <h2>Informe a data de compra do produto</h2>
-      <mat-form-field>
-        <mat-label>Escolha uma data</mat-label>
-        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" formControlName="dataCompra">
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Voltar</button>
-        <button mat-button matStepperNext>Enviar</button>
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Informe a data de compra do produto</h2>
       </div>
-    </form>
+      <div class="step_container_content">
+        <form class="step_container_content__form"  [formGroup]="garantiaForm3">
+          <mat-form-field>
+            <mat-label>Escolha uma data</mat-label>
+            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" formControlName="dataCompra">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </mat-step>
   <mat-step [stepControl]="garantiaForm4">
-    <form [formGroup]="garantiaForm4">
-      <ng-template matStepLabel>Formulário A - Etapa 2</ng-template>
-      <p>Arraste e solte o arquivo aqui ou clique para selecionar o arquivo:</p>
-      <ngx-file-drop
-        (onFileDrop)="onFileDropped($event)"
-        (onFileOver)="fileOver($event)"
-        (onFileLeave)="fileLeave($event)">
-        <ng-template ngx-file-drop-content-tmp>
-          <div class="file-drop-content">
-            <p>Solte os arquivos aqui</p>
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
+        <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="garantiaForm4">
+          <ng-template matStepLabel>Formulário A - Etapa 2</ng-template>
+          <p>Arraste e solte o arquivo aqui ou clique para selecionar o arquivo:</p>
+          <ngx-file-drop
+            (onFileDrop)="onFileDropped($event)"
+            (onFileOver)="fileOver($event)"
+            (onFileLeave)="fileLeave($event)">
+            <ng-template ngx-file-drop-content-tmp>
+              <div class="file-drop-content">
+                <p>Solte os arquivos aqui</p>
+              </div>
+            </ng-template>
+          </ngx-file-drop>
+          <div *ngIf="file">
+            <p>Arquivo selecionado: {{ file.name }}</p>
           </div>
-        </ng-template>
-      </ngx-file-drop>
-      <div *ngIf="file">
-        <p>Arquivo selecionado: {{ file.name }}</p>
+          <div>
+            <button mat-button matStepperPrevious>Anterior</button>
+            <button mat-button matStepperNext>Próximo</button>
+          </div>
+        </form>
       </div>
-      <div>
-        <button mat-button matStepperPrevious>Anterior</button>
-        <button mat-button matStepperNext>Próximo</button>
-      </div>
-    </form>
+    </div>
+
+
   </mat-step>
   <mat-step [stepControl]="garantiaForm5">
     <form [formGroup]="garantiaForm4">
