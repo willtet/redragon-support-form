@@ -48,12 +48,14 @@
 
 }
 
+
 .step_container_form{
   display: flex;
   flex-direction: column;
   width: 35% !important;
   padding: 2%;
 }
+
 
 .step_container_options{
   margin: auto;
@@ -80,8 +82,7 @@
   gap: 25px;
 }
 
-.step_container_options__buttons > *{
-  text-align: left;
+.step_container_options__buttons button{
   width: 451px;
   height: 79px;
   border-radius: 16px;

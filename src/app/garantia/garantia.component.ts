@@ -94,7 +94,9 @@ export class GarantiaComponent {
 
 
 
-
+  private readonly _currentYear = new Date().getFullYear();
+  readonly minDate = new Date(this._currentYear - 20, 0, 1);
+  readonly maxDate = new Date();
 
 
 
