@@ -13,8 +13,18 @@
 .step_container_label h2{
   font-size: 32px;
   font-weight: 700;
-  line-height: 39.01px;
   text-align: center;
+  margin-bottom: 0px;
+}
+
+.step_container_label p{
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 20.57px;
+  text-align: center;
+  color: #6B6B6B;
+  margin-top: 0px;
 }
 
 .step_container_content{
@@ -24,6 +34,14 @@
 .step_container_content {
   margin: 3% auto;
   width: 35%;
+}
+
+.step_container_textarea{
+  margin: auto;
+}
+
+.from_textarea{
+  width: 750px;
 }
 
 .step_container_content__form{
@@ -51,6 +69,22 @@
   text-align: center;
   border:none;
   background-color: #FF0000;
+  margin-left: auto;
+}
+
+.step_container_content__form__button__middle{
+  width: 259px;
+  height: 47px;
+  gap: 0px;
+  border-radius: 12px;
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 36px;
+  text-align: center;
+  border:none;
+  background-color: #A3A3A3;
+  margin-left: auto;
 }
 
 .step_container_content__form__button__back{
@@ -73,6 +107,11 @@
   color: white;
 }
 
+.step_container_content__form__button__child{
+  display: flex;
+    gap: 10px;
+}
+
 .form_textarea{
   border: solid 2px red;
 }
@@ -85,3 +124,37 @@
   border: solid 2px red;
 }
 
+::ng-deep .ngx-file-drop__drop-zone{
+  width: 700px;
+  height: 430px !important;
+  border: 2px dotted #5C5C5C !important;
+}
+
+::ng-deep .ngx-file-drop__content{
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.step_textarea{
+  color: #5C5C5C;
+  text-align: center;
+}
+
+.step_textarea img{
+  width: 85px;
+  height: 85px;
+}
+
+.step_textarea a{
+  color: #FF0000;
+}
+
+.step_textarea p:first-of-type{
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.step_textarea__files_accept{
+  font-size: 14px;
+  font-weight: 500;
+}

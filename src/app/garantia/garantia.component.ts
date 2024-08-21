@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -32,6 +32,9 @@ export class GarantiaComponent {
 
   previousFormData: any;
   file: File | null = null;
+
+  formats: string = ".png .jpg .pdf";
+  multiple: boolean = true;
 
   goBack(): void {
     window.history.back();
@@ -67,16 +70,16 @@ export class GarantiaComponent {
 
 
   garantiaForm = this._formBuilder.group({
-    nome: ['', Validators.required],
-    serie: ['', Validators.required],
+    nome: ['a', Validators.required],
+    serie: ['a', Validators.required],
   });
 
   garantiaForm2 = this._formBuilder.group({
-    mensagem: ['', Validators.required]
+    mensagem: ['a', Validators.required]
   });
 
   garantiaForm3 = this._formBuilder.group({
-    dataCompra: ['', Validators.required]
+    dataCompra: ['a', Validators.required]
   });
 
   garantiaForm4 = this._formBuilder.group({
@@ -88,7 +91,7 @@ export class GarantiaComponent {
   });
 
   garantiaForm6 = this._formBuilder.group({
-    file: ['', Validators.required]
+    mensagem: ['', Validators.required]
   });
 
 

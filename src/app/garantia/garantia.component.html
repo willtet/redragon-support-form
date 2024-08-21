@@ -72,68 +72,90 @@
         <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
         <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
       </div>
-      <div class="step_container_content">
-        <form class="step_container_content__form" [formGroup]="garantiaForm4">
-          <ng-template matStepLabel>Formulário A - Etapa 2</ng-template>
-          <p>Arraste e solte o arquivo aqui ou clique para selecionar o arquivo:</p>
+      <div class="step_container_textarea">
+        <form class="step_container_content__form from_textarea" [formGroup]="garantiaForm4">
           <ngx-file-drop
             (onFileDrop)="onFileDropped($event)"
             (onFileOver)="fileOver($event)"
-            (onFileLeave)="fileLeave($event)">
+            (onFileLeave)="fileLeave($event)"
+            [accept]="formats"
+            [multiple]="multiple"
+            >
             <ng-template ngx-file-drop-content-tmp>
-              <div class="file-drop-content">
-                <p>Solte os arquivos aqui</p>
+              <div class="file-drop-content step_textarea">
+                <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="">procurar</a></p>
+                <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
               </div>
             </ng-template>
           </ngx-file-drop>
           <div *ngIf="file">
             <p>Arquivo selecionado: {{ file.name }}</p>
           </div>
-          <div>
-            <button mat-button matStepperPrevious>Anterior</button>
-            <button mat-button matStepperNext>Próximo</button>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
           </div>
         </form>
       </div>
     </div>
-
-
   </mat-step>
   <mat-step [stepControl]="garantiaForm5">
-    <form [formGroup]="garantiaForm4">
-      <ng-template matStepLabel>Formulário A - Etapa 2</ng-template>
-      <p>Arraste e solte o arquivo aqui ou clique para selecionar o arquivo:</p>
-      <ngx-file-drop
-        (onFileDrop)="onFileDropped($event)"
-        (onFileOver)="fileOver($event)"
-        (onFileLeave)="fileLeave($event)">
-        <ng-template ngx-file-drop-content-tmp>
-          <div class="file-drop-content">
-            <p>Solte os arquivos aqui</p>
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, envie uma foto da Nota Fiscal do Produto</h2>
+        <p>Dificuldade ao localizar a nota? <a>clique aqui</a></p>
+      </div>
+      <div class="step_container_textarea">
+        <form class="step_container_content__form from_textarea" [formGroup]="garantiaForm5">
+          <ngx-file-drop
+            (onFileDrop)="onFileDropped($event)"
+            (onFileOver)="fileOver($event)"
+            (onFileLeave)="fileLeave($event)"
+            [accept]="formats"
+            [multiple]="multiple"
+            >
+            <ng-template ngx-file-drop-content-tmp>
+              <div class="file-drop-content step_textarea">
+                <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="">procurar</a></p>
+                <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
+              </div>
+            </ng-template>
+          </ngx-file-drop>
+          <div *ngIf="file">
+            <p>Arquivo selecionado: {{ file.name }}</p>
           </div>
-        </ng-template>
-      </ngx-file-drop>
-      <div *ngIf="file">
-        <p>Arquivo selecionado: {{ file.name }}</p>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <div class="step_container_content__form__button__child">
+              <button class="step_container_content__form__button__middle " mat-button matStepperNext>Não tenho Nota Fiscal</button>
+              <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div>
-        <button mat-button matStepperPrevious>Anterior</button>
-        <button mat-button matStepperNext>Próximo</button>
-      </div>
-    </form>
+    </div>
   </mat-step>
   <mat-step [stepControl]="garantiaForm6">
-    <form [formGroup]="garantiaForm2">
-      <h2>Faça uma descrição detalhada do problema apresentado</h2>
-      <mat-form-field>
-        <mat-label>Mensagem</mat-label>
-        <textarea matInput formControlName="mensagem" required></textarea>
-        <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Voltar</button>
-        <button mat-button matStepperNext>Enviar</button>
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por que sua Nota Fiscal não está disponível?</h2>
       </div>
-    </form>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="garantiaForm6">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
   </mat-step>
 </mat-horizontal-stepper>
