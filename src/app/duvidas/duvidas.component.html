@@ -1,0 +1,88 @@
+<mat-horizontal-stepper linear>
+  <mat-step [stepControl]="duvidaForm">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, Informe o nome e o número de série do produto que deseja acionar a Garantia</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form"  [formGroup]="duvidaForm">
+          <mat-form-field>
+            <mat-label>Nome</mat-label>
+            <input type="text" matInput formControlName="nome" placeholder="Nome" required>
+            <mat-error *ngIf="duvidaForm.controls['nome'].hasError('required')">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Série</mat-label>
+            <input type="text" matInput formControlName="serie" placeholder="Série" required>
+            <mat-error *ngIf="duvidaForm.controls['serie'].hasError('required')">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="duvidaForm2">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Qual sistema operacional você utiliza?</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="duvidaForm2">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="duvidaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="duvidaForm3">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Informe a data de compra do produto</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form"  [formGroup]="duvidaForm3">
+          <mat-form-field>
+            <mat-label>Escolha uma data</mat-label>
+            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" formControlName="dataCompra">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="duvidaForm4">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, descreva brevemente o problema enfrentado</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="duvidaForm4">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="duvidaForm4.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 
 @Component({
-  selector: 'app-software',
+  selector: 'app-duvidas',
   standalone: true,
   imports: [
     MatButtonModule,
@@ -23,10 +23,11 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
     CommonModule,
     NgxFileDropModule
   ],
-  templateUrl: './software.component.html',
-  styleUrl: './software.component.css'
+  templateUrl: './duvidas.component.html',
+  styleUrl: './duvidas.component.css'
 })
-export class SoftwareComponent {
+export class DuvidasComponent {
+
   previousFormData: any;
   file: File | null = null;
 
@@ -66,39 +67,20 @@ export class SoftwareComponent {
 
 
 
-  softwareForm = this._formBuilder.group({
+  duvidaForm = this._formBuilder.group({
     nome: ['a', Validators.required],
     serie: ['a', Validators.required],
   });
 
-  softwareForm2 = this._formBuilder.group({
-    file: this.file
-  });
-
-  softwareForm3 = this._formBuilder.group({
+  duvidaForm2 = this._formBuilder.group({
     mensagem: ['a', Validators.required]
   });
 
-  softwareForm4 = this._formBuilder.group({
-    mensagem: ['a', Validators.required]
+  duvidaForm3 = this._formBuilder.group({
+    dataCompra: ['a', Validators.required]
   });
 
-  softwareForm5 = this._formBuilder.group({
-  });
-
-  softwareForm6 = this._formBuilder.group({
-    mensagem: ['a', Validators.required]
-  });
-
-  softwareForm7 = this._formBuilder.group({
-    file: this.file
-  });
-
-  softwareForm8 = this._formBuilder.group({
-    mensagem: ['a', Validators.required]
-  });
-
-  softwareForm9 = this._formBuilder.group({
+  duvidaForm4 = this._formBuilder.group({
     mensagem: ['a', Validators.required]
   });
 
@@ -109,4 +91,5 @@ export class SoftwareComponent {
 
 
   constructor(private _formBuilder: FormBuilder, private route:ActivatedRoute, private router:Router, private location: Location) {}
+
 }

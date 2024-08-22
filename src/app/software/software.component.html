@@ -1,0 +1,219 @@
+<mat-horizontal-stepper linear>
+  <mat-step [stepControl]="softwareForm">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, Informe o nome e o número de série do produto que deseja acionar a Garantia</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form"  [formGroup]="softwareForm">
+          <mat-form-field>
+            <mat-label>Nome</mat-label>
+            <input type="text" matInput formControlName="nome" placeholder="Nome" required>
+            <mat-error *ngIf="softwareForm.controls['nome'].hasError('required')">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Série</mat-label>
+            <input type="text" matInput formControlName="serie" placeholder="Série" required>
+            <mat-error *ngIf="softwareForm.controls['serie'].hasError('required')">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm2">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
+        <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+      </div>
+      <div class="step_container_textarea">
+        <form class="step_container_content__form from_textarea" [formGroup]="softwareForm2">
+          <ngx-file-drop
+            (onFileDrop)="onFileDropped($event)"
+            (onFileOver)="fileOver($event)"
+            (onFileLeave)="fileLeave($event)"
+            [accept]="formats"
+            [multiple]="multiple"
+            >
+            <ng-template ngx-file-drop-content-tmp>
+              <div class="file-drop-content step_textarea">
+                <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="">procurar</a></p>
+                <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
+              </div>
+            </ng-template>
+          </ngx-file-drop>
+          <div *ngIf="file">
+            <p>Arquivo selecionado: {{ file.name }}</p>
+          </div>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm3">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Qual sistema operacional você utiliza?</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="softwareForm3">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="softwareForm3.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm4">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Se possível, informe as especificações do seu Pc</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="softwareForm4">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="softwareForm4.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm5">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>PSelecione a opção que melhor se encaixa no seu caso</h2>
+      </div>
+      <div>
+        <div class="">
+          <button class=" " mat-button (click)="goBack()">Não encontrei o software do meu produto</button>
+          <button class="" mat-button matStepperNext>Baixei uma versão do software e estou tendo problemas</button>
+        </div>
+      </div>
+      <div class="step_container_textarea">
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <div class="step_container_content__form__button__child">
+              <button class="step_container_content__form__button__middle " mat-button matStepperNext>Não tenho Nota Fiscal</button>
+              <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm6">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, descreva brevemente o problema enfrentado</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="softwareForm6">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="softwareForm6.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm7">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Envie um print ou imagem do problema</h2>
+      </div>
+      <div class="step_container_textarea">
+        <form class="step_container_content__form from_textarea" [formGroup]="softwareForm7">
+          <ngx-file-drop
+            (onFileDrop)="onFileDropped($event)"
+            (onFileOver)="fileOver($event)"
+            (onFileLeave)="fileLeave($event)"
+            [accept]="formats"
+            [multiple]="multiple"
+            >
+            <ng-template ngx-file-drop-content-tmp>
+              <div class="file-drop-content step_textarea">
+                <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="">procurar</a></p>
+                <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
+              </div>
+            </ng-template>
+          </ngx-file-drop>
+          <div *ngIf="file">
+            <p>Arquivo selecionado: {{ file.name }}</p>
+          </div>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm8">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Quando o problema começou a acontecer?</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="softwareForm8">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="softwareForm8.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="softwareForm9">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Você realizou alguma mudança significativa em seu sistema recentemente?</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="softwareForm9">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="softwareForm9.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
