@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +13,7 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 @Component({
   selector: 'app-duvidas',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     MatButtonModule,
     MatStepperModule,

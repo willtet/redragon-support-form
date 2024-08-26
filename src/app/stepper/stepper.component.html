@@ -32,7 +32,7 @@
       <div class="step_container_options__buttons">
         <button mat-button (click)="goToForm('garantia')">Garantia</button>
         <button mat-button (click)="goToForm('software')">Software</button>
-        <button mat-button (click)="goToForm('assistencia')">Dúvidas e Assistências</button>
+        <button mat-button (click)="goToForm('duvidas')">Dúvidas e Assistências</button>
         <button mat-button (click)="goToForm('parcerias')">Parcerias</button>
         <button mat-button (click)="goToForm('revenda')">Revenda</button>
         <button mat-button (click)="goToForm('outros')">Outros</button>
@@ -42,29 +42,16 @@
       </div>
     </div>
   </mat-step>
-  <mat-step *ngIf="selectedForm === 'garantia'" [stepControl]="secondFormGroupA">
-    <app-garantia></app-garantia>
+  <mat-step *ngIf="selectedForm === 'garantia'" >
+    <app-garantia [formGroup]="firstFormGroup" [stepper]="stepper"></app-garantia>
   </mat-step>
-  <mat-step *ngIf="selectedForm === 'formB'" [stepControl]="secondFormGroupB">
-    <form [formGroup]="secondFormGroupB">
-      <ng-template matStepLabel>Formulário B</ng-template>
-      <!-- Conteúdo do formulário B -->
-      <button mat-button matStepperNext>Próximo</button>
-    </form>
+  <mat-step *ngIf="selectedForm === 'software'" >
+    <app-software [formGroup]="firstFormGroup"></app-software>
   </mat-step>
-  <mat-step *ngIf="selectedForm === 'formC'" [stepControl]="secondFormGroupC">
-    <form [formGroup]="secondFormGroupC">
-      <ng-template matStepLabel>Formulário C</ng-template>
-      <!-- Conteúdo do formulário C -->
-      <button mat-button matStepperNext>Próximo</button>
-    </form>
+  <mat-step *ngIf="selectedForm === 'duvidas'" >
+    <app-duvidas [formGroup]="firstFormGroup"></app-duvidas>
   </mat-step>
-  <mat-step [stepControl]="thirdFormGroup">
-    <form [formGroup]="thirdFormGroup">
-      <ng-template matStepLabel>Step 3</ng-template>
-      <!-- Conteúdo do formulário da etapa 3 -->
-      <button mat-button matStepperPrevious>Voltar</button>
-      <button mat-button (click)="submitForm()">Enviar</button>
-    </form>
+  <mat-step *ngIf="selectedForm === 'duvidas'" >
+    <app-duvidas [formGroup]="firstFormGroup"></app-duvidas>
   </mat-step>
 </mat-horizontal-stepper>

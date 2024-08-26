@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatStepperModule} from '@angular/material/stepper';
+import {MatStepper, MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -30,14 +30,24 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 })
 export class GarantiaComponent {
 
-  previousFormData: any;
+  @Input() formGroup!: FormGroup;
+  @Input() stepper!: MatStepper;
   file: File | null = null;
 
   formats: string = ".png .jpg .pdf";
   multiple: boolean = true;
 
+
   goBack(): void {
-    window.history.back();
+    this.garantiaForm.reset();
+    this.garantiaForm2.reset();
+    this.garantiaForm3.reset();
+    this.garantiaForm4.reset();
+    this.garantiaForm5.reset();
+    this.garantiaForm6.reset();
+
+
+    this.stepper.previous();
   }
 
   public onFileDropped(files: NgxFileDropEntry[]) {
@@ -101,7 +111,22 @@ export class GarantiaComponent {
   readonly minDate = new Date(this._currentYear - 20, 0, 1);
   readonly maxDate = new Date();
 
+  submit(){
+    const garantia = {
+      ...this.garantiaForm.value,
+      ...this.garantiaForm2.value,
+      ...this.garantiaForm3.value,
+      ...this.garantiaForm4.value,
+      ...this.garantiaForm5.value,
+      ...this.garantiaForm6.value
+    }
 
+    const dados = {
+      ...this.formGroup.value,
+      garantia
+    }
+    console.log(dados)
+  }
 
   constructor(private _formBuilder: FormBuilder, private route:ActivatedRoute, private router:Router, private location: Location) {}
 }

@@ -6,10 +6,15 @@ import { MatStepperModule, MatStepper } from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
 import { GarantiaComponent } from '../garantia/garantia.component';
 import { CommonModule } from '@angular/common';
+import { SoftwareComponent } from "../software/software.component";
+import { DuvidasComponent } from "../duvidas/duvidas.component";
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stepper',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -18,8 +23,10 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    GarantiaComponent
-  ],
+    GarantiaComponent,
+    SoftwareComponent,
+    DuvidasComponent
+],
   templateUrl: './stepper.component.html',
   styleUrl: './stepper.component.css'
 })
@@ -27,13 +34,9 @@ export class StepperComponent {
   @ViewChild('stepper') stepper!: MatStepper;
 
   firstFormGroup: FormGroup;
-  secondFormGroupA: FormGroup;
-  secondFormGroupB: FormGroup;
-  secondFormGroupC: FormGroup;
-  thirdFormGroup: FormGroup;
   selectedForm: string | null = null;
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder, private router: Router) {
 
 
     this.firstFormGroup = this._formBuilder.group({
@@ -41,29 +44,10 @@ export class StepperComponent {
       email: ['a', Validators.required],
       telefone: ['a', Validators.required],
     });
-    this.secondFormGroupA = this._formBuilder.group({
-
-    });
-    this.secondFormGroupB = this._formBuilder.group({
-      secondCtrlB: ['', Validators.required]
-    });
-    this.secondFormGroupC = this._formBuilder.group({
-      secondCtrlC: ['', Validators.required]
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      thirdCtrl: ['', Validators.required]
-    });
   }
 
   goToForm(form: string) {
     this.selectedForm = form;
-    console.log(this.firstFormGroup);
     this.stepper.next();
-  }
-
-  submitForm() {
-    if (this.thirdFormGroup.valid) {
-      console.log('Formulário enviado!');
-    }
   }
 }

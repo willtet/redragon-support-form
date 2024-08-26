@@ -4,6 +4,7 @@ import { ParentComponent } from './parent/parent.component';
 import { GarantiaComponent } from './garantia/garantia.component';
 import { HomeComponent } from './home/home.component';
 import { InicioComponent } from './inicio/inicio.component';
+import { SoftwareComponent } from './software/software.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
@@ -16,6 +17,7 @@ export const routes: Routes = [
       { component: InicioComponent, path: "inicio" },
       { component: FiltrosComponent, path: "filtros" },
       { component: GarantiaComponent, path: "garantia" },
+      { component: SoftwareComponent, path: "software" },
       { path: "**", redirectTo: "inicio" },
     ]
   },

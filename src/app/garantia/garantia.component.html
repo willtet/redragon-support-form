@@ -130,7 +130,7 @@
             <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
             <div class="step_container_content__form__button__child">
               <button class="step_container_content__form__button__middle " mat-button matStepperNext>Não tenho Nota Fiscal</button>
-              <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+              <button type="submit" class="step_container_content__form__button__next" mat-button matStepperNext (click)="submit()">Enviar</button>
             </div>
           </div>
         </form>
