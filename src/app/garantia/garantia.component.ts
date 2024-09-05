@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -29,10 +29,11 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GarantiaComponent {
-
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
   @Input() formGroup!: FormGroup;
   @Input() stepper!: MatStepper;
-  file: File | null = null;
+  public files: NgxFileDropEntry[] = [];
+  public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
 
   formats: string = ".png .jpg .pdf";
   multiple: boolean = true;
@@ -56,13 +57,20 @@ export class GarantiaComponent {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-          // Aqui você pode acessar o arquivo e armazená-lo em uma variável
-          this.file = file;
-          console.log(file);
+          const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+          if (this.allowedExtensions.includes(fileExtension || '')) {
+            // Se for um arquivo permitido, adiciona à lista
+            this.files.push(droppedFile);
+          } else {
+            console.warn(`Arquivo com extensão .${fileExtension} não permitido.`);
+          }
+
+          this.cdr.detectChanges();
         });
       } else {
-        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-        console.log('Dropped file is a directory', fileEntry);
+        console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
+
       }
     }
   }
@@ -73,6 +81,27 @@ export class GarantiaComponent {
 
   public fileLeave(event: any) {
     console.log('Arquivo saiu da área de drop:', event);
+  }
+
+  public openFileSelector(event: any): void {
+    event.preventDefault()
+    this.fileInput.nativeElement.click();
+  }
+
+  public onFilesSelected(event: any): void {
+    const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
+      return {
+        fileEntry: {
+          isFile: true,
+          isDirectory: false,
+          name: file.name,
+          file: (callback: (file: File) => void) => callback(file),
+        } as FileSystemFileEntry,
+        relativePath: file.name
+      };
+    });
+
+    this.onFileDropped(files);
   }
 
 
@@ -93,11 +122,11 @@ export class GarantiaComponent {
   });
 
   garantiaForm4 = this._formBuilder.group({
-    file: ['']
+    file: this.files
   });
 
   garantiaForm5 = this._formBuilder.group({
-    file: ['']
+    file: this.files
   });
 
   garantiaForm6 = this._formBuilder.group({
@@ -125,8 +154,38 @@ export class GarantiaComponent {
       ...this.formGroup.value,
       garantia
     }
-    console.log(dados)
+
+    const formData = new FormData();
+
+    // Adiciona dados do formulário
+    for (const [key, value] of Object.entries(dados)) {
+      if (Array.isArray(value)) {
+        // Se for uma lista de arquivos, adicione cada arquivo individualmente
+        value.forEach((file: NgxFileDropEntry) => {
+          if (file.fileEntry.isFile) {
+            const fileEntry = file.fileEntry as FileSystemFileEntry;
+            fileEntry.file((file: File) => {
+              formData.append('files[]', file, file.name);
+            });
+          }
+        });
+      } else if (typeof value === 'string' || value instanceof Blob) {
+        // Se for uma string ou um Blob, pode adicionar diretamente
+        formData.append(key, value);
+      } else if (typeof value === 'number') {
+        // Se for um número, converta para string
+        formData.append(key, value.toString());
+      }
+    }
+
+    console.log(formData);
+
   }
 
-  constructor(private _formBuilder: FormBuilder, private route:ActivatedRoute, private router:Router, private location: Location) {}
+  constructor(
+    private _formBuilder: FormBuilder,
+    private route:ActivatedRoute,
+    private router:Router,
+    private location: Location,
+    private cdr: ChangeDetectorRef) {}
 }
