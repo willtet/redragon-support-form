@@ -1,14 +1,15 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
+import { EnviadoComponent } from "../enviado/enviado.component";
 
 @Component({
   selector: 'app-duvidas',
@@ -23,46 +24,28 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
     MatInputModule,
     MatDatepickerModule,
     CommonModule,
-    NgxFileDropModule
-  ],
+    NgxFileDropModule,
+    EnviadoComponent
+],
   templateUrl: './duvidas.component.html',
   styleUrl: './duvidas.component.css'
 })
 export class DuvidasComponent {
 
-  previousFormData: any;
-  file: File | null = null;
+  @ViewChild('stepper') stepperChild!: MatStepper;
+  @Input({required: true}) formGroup!: FormGroup;
+  @Input({required: true}) stepper!: MatStepper;
 
-  formats: string = ".png .jpg .pdf";
-  multiple: boolean = true;
+  public selectedForm: string | null = null;
+
 
   goBack(): void {
-    window.history.back();
-  }
+    this.duvidaForm.reset();
+    this.duvidaForm2.reset();
+    this.duvidaForm3.reset();
+    this.duvidaForm4.reset();
 
-  public onFileDropped(files: NgxFileDropEntry[]) {
-    for (const droppedFile of files) {
-      // Verifica se é um arquivo
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-        fileEntry.file((file: File) => {
-          // Aqui você pode acessar o arquivo e armazená-lo em uma variável
-          this.file = file;
-          console.log(file);
-        });
-      } else {
-        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-        console.log('Dropped file is a directory', fileEntry);
-      }
-    }
-  }
-
-  public fileOver(event: any) {
-    console.log('Arquivo sobre a área de drop:', event);
-  }
-
-  public fileLeave(event: any) {
-    console.log('Arquivo saiu da área de drop:', event);
+    this.stepper.previous();
   }
 
 
@@ -75,7 +58,7 @@ export class DuvidasComponent {
   });
 
   duvidaForm2 = this._formBuilder.group({
-    mensagem: ['a', Validators.required]
+    problemaDetalhado: ['a', Validators.required]
   });
 
   duvidaForm3 = this._formBuilder.group({
@@ -83,7 +66,7 @@ export class DuvidasComponent {
   });
 
   duvidaForm4 = this._formBuilder.group({
-    mensagem: ['a', Validators.required]
+    problemaResumo: ['a', Validators.required]
   });
 
 
@@ -92,6 +75,28 @@ export class DuvidasComponent {
   readonly maxDate = new Date();
 
 
-  constructor(private _formBuilder: FormBuilder, private route:ActivatedRoute, private router:Router, private location: Location) {}
+
+  submit() {
+    const duvidas = {
+      ...this.formGroup.value,
+      ...this.duvidaForm.value,
+      ...this.duvidaForm2.value,
+      ...this.duvidaForm3.value,
+      ...this.duvidaForm4.value
+    }
+    // Estrutura do objeto que você deseja
+    const response = {
+        ...duvidas
+    };
+
+    console.log(response);
+    this.selectedForm = 'enviado';
+    this.cdr.detectChanges();
+    this.stepperChild.next();
+  }
+
+
+  constructor(private _formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef) {}
 
 }

@@ -1,0 +1,215 @@
+
+.step_container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.step_container_label{
+  margin: auto;
+  width: 50%;
+}
+
+.step_container_label h2{
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+.step_container_label p{
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 20.57px;
+  text-align: center;
+  color: #6B6B6B;
+  margin-top: 0px;
+}
+
+.step_container_content{
+  margin: auto;
+}
+
+.step_container_content {
+  margin: 3% auto;
+  width: 35%;
+}
+
+.step_container_textarea{
+  margin: auto;
+}
+
+.from_textarea{
+  width: 750px;
+}
+
+.step_container_content__form{
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+  justify-content: center;
+}
+
+.step_container_content__form__button{
+  margin-top: 3%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.step_container_content__form__button__next{
+  width: 150px;
+  height: 47px;
+  gap: 0px;
+  border-radius: 12px;
+  color: #fff !important;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 36px;
+  text-align: center;
+  border:none;
+  background-color: #FF0000;
+  margin-left: auto;
+}
+
+.step_container_content__form__button__middle{
+  width: 259px;
+  height: 47px;
+  gap: 0px;
+  border-radius: 12px;
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 36px;
+  text-align: center;
+  border:none;
+  background-color: #A3A3A3;
+  margin-left: auto;
+}
+
+.step_container_content__form__button__back{
+  width: 162.25px;
+  height: 54px;
+  gap: 0px;
+  border-radius: 17px;
+  border: 2px solid red;
+  opacity: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21.94px;
+  text-align: center;
+  background-color: white;
+  color: red;
+}
+
+.step_container_content__form__button__back:hover{
+  background-color: red;
+  color: white;
+}
+
+.step_container_content__form__button__child{
+  display: flex;
+    gap: 10px;
+}
+
+.form_textarea{
+  border: solid 2px red;
+}
+
+.form_textarea__input{
+  height: 200px;
+}
+
+.form_textarea__input > ::ng-deep .mat-mdc-text-field-wrapper{
+  border: solid 2px red;
+}
+
+::ng-deep .ngx-file-drop__drop-zone{
+  width: 700px;
+  height: 430px !important;
+  border: 2px dotted #5C5C5C !important;
+}
+
+::ng-deep .ngx-file-drop__content{
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.step_textarea{
+  color: #5C5C5C;
+  text-align: center;
+}
+
+.step_textarea img{
+  width: 85px;
+  height: 85px;
+}
+
+.step_textarea a{
+  color: #FF0000;
+}
+
+.step_textarea p:first-of-type{
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.step_textarea__files_accept{
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.step_container_options{
+  margin: auto;
+  width: 70%;
+  text-align: center;
+}
+
+.step_container_options > *{
+  margin-bottom: 5%;
+}
+
+.step_container_options h1{
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 58.51px;
+
+}
+
+.step_container_options__buttons{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.step_container_options__buttons button{
+  width: 451px;
+  height: 79px;
+  border-radius: 16px;
+  border: 2px solid black;
+  opacity: 0px;
+  font-size: 20px;
+}
+
+.step_container_options__back button{
+  width: 162.25px;
+  height: 54px;
+  gap: 0px;
+  border-radius: 17px;
+  border: 2px solid red;
+  opacity: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21.94px;
+  text-align: center;
+  background-color: white;
+  color: red;
+}
+
+.step_container_options__back button:hover, .step_container_options__buttons button:hover{
+  background-color: red;
+  color: white;
+  transition-duration: 0.5s;
+}

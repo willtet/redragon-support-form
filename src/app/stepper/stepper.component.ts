@@ -1,4 +1,4 @@
-import { Component, ViewChild  } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef  } from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -10,6 +10,9 @@ import { SoftwareComponent } from "../software/software.component";
 import { DuvidasComponent } from "../duvidas/duvidas.component";
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
+import { ParceriasComponent } from "../parcerias/parcerias.component";
+import { RevendaComponent } from "../revenda/revenda.component";
+import { OutrosComponent } from "../outros/outros.component";
 
 @Component({
   selector: 'app-stepper',
@@ -25,7 +28,10 @@ import { Router } from '@angular/router';
     MatInputModule,
     GarantiaComponent,
     SoftwareComponent,
-    DuvidasComponent
+    DuvidasComponent,
+    ParceriasComponent,
+    RevendaComponent,
+    OutrosComponent
 ],
   templateUrl: './stepper.component.html',
   styleUrl: './stepper.component.css'
@@ -36,18 +42,20 @@ export class StepperComponent {
   firstFormGroup: FormGroup;
   selectedForm: string | null = null;
 
-  constructor(private _formBuilder: FormBuilder, private router: Router) {
+  constructor(private _formBuilder: FormBuilder, private router: Router, private cdr: ChangeDetectorRef) {
 
 
     this.firstFormGroup = this._formBuilder.group({
-      nomeCompleto: ['a', Validators.required],
-      email: ['a', Validators.required],
-      telefone: ['a', Validators.required],
+      nomeCompleto: ['', Validators.required],
+      email: ['', Validators.required],
+      telefone: ['', Validators.required],
     });
   }
 
   goToForm(form: string) {
+    console.log('Selected form:', form);
     this.selectedForm = form;
+    this.cdr.detectChanges();
     this.stepper.next();
   }
 }

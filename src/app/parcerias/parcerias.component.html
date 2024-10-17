@@ -1,0 +1,65 @@
+<mat-horizontal-stepper linear #stepper>
+  <mat-step [stepControl]="parceriasForm">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, descreva sua mensagem abaixo apresentando os principais pontos da sua proposta</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form" [formGroup]="parceriasForm">
+          <mat-form-field class="form_textarea__input">
+            <mat-label>Mensagem</mat-label>
+            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
+            <mat-error *ngIf="parceriasForm.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+          </mat-form-field>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="parceriasForm2">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Caso tenha, envie um Midiakit ou Apresentação</h2>
+      </div>
+      <div class="step_container_textarea">
+        <form class="step_container_content__form from_textarea" [formGroup]="parceriasForm2">
+          <ngx-file-drop
+            (onFileDrop)="onFileDropped($event,'apresentacao')"
+            (onFileOver)="fileOver($event)"
+            (onFileLeave)="fileLeave($event)"
+            [accept]="formats"
+            [multiple]="multiple"
+            >
+            <ng-template ngx-file-drop-content-tmp>
+              <div class="file-drop-content step_textarea">
+                <img src="../../assets/page_assets/cloud_upload.svg" alt="">
+                <p>Solte os arquivos para fazer <br/> upload ou <a (click)="openFileSelector($event)">procurar</a></p>
+                <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
+              </div>
+            </ng-template>
+          </ngx-file-drop>
+          <input type="file" #fileInput multiple (change)="onFilesSelected($event,'apresentacao')" style="display: none;" />
+          <div *ngIf="apresentacao.length > 0">
+            <h3>Arquivos aceitos:</h3>
+            <ul>
+              <li *ngFor="let file of apresentacao">{{ file.relativePath }}</li>
+            </ul>
+          </div>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <div class="step_container_content__form__button__child">
+              <button class="step_container_content__form__button__middle " mat-button matStepperNext>Não tenho</button>
+              <button type="submit" class="step_container_content__form__button__next" mat-button (click)="submit()">Enviar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step *ngIf="selectedForm === 'enviado'">
+    <app-enviado></app-enviado>
+  </mat-step>
+</mat-horizontal-stepper>

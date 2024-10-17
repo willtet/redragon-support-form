@@ -9,6 +9,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import { CommonModule, Location  } from '@angular/common';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
+import { EnviadoComponent } from "../enviado/enviado.component";
 
 @Component({
   selector: 'app-garantia',
@@ -22,7 +23,8 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
     MatInputModule,
     MatDatepickerModule,
     CommonModule,
-    NgxFileDropModule
+    NgxFileDropModule,
+    EnviadoComponent
   ],
   templateUrl: './garantia.component.html',
   styleUrl: './garantia.component.css',
@@ -30,10 +32,14 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 })
 export class GarantiaComponent {
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
-  @Input() formGroup!: FormGroup;
-  @Input() stepper!: MatStepper;
-  public files: NgxFileDropEntry[] = [];
+  @ViewChild('stepper') stepperChild!: MatStepper;
+  @Input({required: true}) formGroup!: FormGroup;
+  @Input({required: true}) stepper!: MatStepper;
+  public fotos: NgxFileDropEntry[] = [];
+  public notaFiscal: NgxFileDropEntry[] = [];
+
   public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
+  public selectedForm: string | null = null;
 
   formats: string = ".png .jpg .pdf";
   multiple: boolean = true;
@@ -51,29 +57,28 @@ export class GarantiaComponent {
     this.stepper.previous();
   }
 
-  public onFileDropped(files: NgxFileDropEntry[]) {
-    for (const droppedFile of files) {
-      // Verifica se é um arquivo
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-        fileEntry.file((file: File) => {
-          const fileExtension = file.name.split('.').pop()?.toLowerCase();
-
-          if (this.allowedExtensions.includes(fileExtension || '')) {
-            // Se for um arquivo permitido, adiciona à lista
-            this.files.push(droppedFile);
-          } else {
-            console.warn(`Arquivo com extensão .${fileExtension} não permitido.`);
+  public onFileDropped(files: NgxFileDropEntry[], fileType: 'fotos' | 'notaFiscal') {
+  for (const droppedFile of files) {
+    if (droppedFile.fileEntry.isFile) {
+      const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+      fileEntry.file((file: File) => {
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+        if (this.allowedExtensions.includes(fileExtension || '')) {
+          if (fileType === 'fotos') {
+            this.fotos.push(droppedFile); // Adiciona à lista de fotos
+          } else if (fileType === 'notaFiscal') {
+            this.notaFiscal.push(droppedFile); // Adiciona à lista de nota fiscal
           }
-
-          this.cdr.detectChanges();
-        });
-      } else {
-        console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
-
-      }
+        } else {
+          console.warn(`Arquivo com extensão .${fileExtension} não permitido.`);
+        }
+        this.cdr.detectChanges();
+      });
+    } else {
+      console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
     }
   }
+}
 
   public fileOver(event: any) {
     console.log('Arquivo sobre a área de drop:', event);
@@ -88,7 +93,7 @@ export class GarantiaComponent {
     this.fileInput.nativeElement.click();
   }
 
-  public onFilesSelected(event: any): void {
+  public onFilesSelected(event: any, fileType: 'fotos' | 'notaFiscal'): void {
     const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
       return {
         fileEntry: {
@@ -101,7 +106,7 @@ export class GarantiaComponent {
       };
     });
 
-    this.onFileDropped(files);
+    this.onFileDropped(files, fileType);
   }
 
 
@@ -113,8 +118,8 @@ export class GarantiaComponent {
     serie: ['a', Validators.required],
   });
 
-  garantiaForm2 = this._formBuilder.group({
-    mensagem: ['a', Validators.required]
+  public garantiaForm2 = this._formBuilder.group({
+    descricao: ['teste', Validators.required]
   });
 
   garantiaForm3 = this._formBuilder.group({
@@ -122,11 +127,11 @@ export class GarantiaComponent {
   });
 
   garantiaForm4 = this._formBuilder.group({
-    file: this.files
+    file: ['']
   });
 
   garantiaForm5 = this._formBuilder.group({
-    file: this.files
+    file: ['']
   });
 
   garantiaForm6 = this._formBuilder.group({
@@ -140,52 +145,84 @@ export class GarantiaComponent {
   readonly minDate = new Date(this._currentYear - 20, 0, 1);
   readonly maxDate = new Date();
 
-  submit(){
+  submit() {
     const garantia = {
-      ...this.garantiaForm.value,
-      ...this.garantiaForm2.value,
-      ...this.garantiaForm3.value,
-      ...this.garantiaForm4.value,
-      ...this.garantiaForm5.value,
-      ...this.garantiaForm6.value
-    }
+        ...this.formGroup.value,
+        ...this.garantiaForm.value,
+        ...this.garantiaForm2.value,
+        ...this.garantiaForm3.value,
+        ...this.garantiaForm6.value
+    };
 
-    const dados = {
-      ...this.formGroup.value,
-      garantia
-    }
+    // Estrutura do objeto que você deseja
+    const response = {
+        ...garantia,
+        fotos: [],
+        notaFiscal: []
+    };
 
-    const formData = new FormData();
-
-    // Adiciona dados do formulário
-    for (const [key, value] of Object.entries(dados)) {
-      if (Array.isArray(value)) {
-        // Se for uma lista de arquivos, adicione cada arquivo individualmente
-        value.forEach((file: NgxFileDropEntry) => {
-          if (file.fileEntry.isFile) {
-            const fileEntry = file.fileEntry as FileSystemFileEntry;
-            fileEntry.file((file: File) => {
-              formData.append('files[]', file, file.name);
-            });
-          }
+    // Função para ler um arquivo e retornar como array de bytes
+    const readFileAsBytes = (file: File): Promise<{ name: string; type: string; size: number; bytes: Uint8Array }> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const arrayBuffer = event.target?.result as ArrayBuffer;
+                const bytes = new Uint8Array(arrayBuffer);
+                resolve({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    bytes: bytes
+                });
+            };
+            reader.onerror = (error) => {
+                reject(error);
+            };
+            reader.readAsArrayBuffer(file);
         });
-      } else if (typeof value === 'string' || value instanceof Blob) {
-        // Se for uma string ou um Blob, pode adicionar diretamente
-        formData.append(key, value);
-      } else if (typeof value === 'number') {
-        // Se for um número, converta para string
-        formData.append(key, value.toString());
-      }
-    }
+    };
 
-    console.log(formData);
+    // Lê arquivos de fotos
+    const fotoPromises = this.fotos.map((file: NgxFileDropEntry) => {
+        if (file.fileEntry.isFile) {
+          const fileEntry = file.fileEntry as FileSystemFileEntry;
+          return fileEntry.file((realFile: File) => {
+              return readFileAsBytes(realFile).then((fileData) => {
+                  response.fotos.push(fileData);
+              });
+          });
+        }
+        return Promise.resolve();
+    });
 
+    // Lê arquivos de nota fiscal e adiciona como bytes
+    const notaFiscalPromises = this.notaFiscal.map((file: NgxFileDropEntry) => {
+        if (file.fileEntry.isFile) {
+            const fileEntry = file.fileEntry as FileSystemFileEntry;
+            return fileEntry.file((realFile: File) => {
+                return readFileAsBytes(realFile).then((fileData) => {
+                    response.notaFiscal.push(fileData);
+                });
+            });
+        }
+        return Promise.resolve();
+    });
+
+    // Espera que todos os arquivos sejam lidos
+    Promise.all([...fotoPromises, ...notaFiscalPromises]).then(() => {
+        // Enviar a resposta para o backend ou para onde for necessário
+        console.log(response); // Verificar a estrutura do objeto
+
+
+    });
+
+
+    this.selectedForm = 'enviado';
+    this.cdr.detectChanges();
+    this.stepperChild.next();
   }
 
   constructor(
     private _formBuilder: FormBuilder,
-    private route:ActivatedRoute,
-    private router:Router,
-    private location: Location,
     private cdr: ChangeDetectorRef) {}
 }

@@ -5,6 +5,7 @@ import { GarantiaComponent } from './garantia/garantia.component';
 import { HomeComponent } from './home/home.component';
 import { InicioComponent } from './inicio/inicio.component';
 import { SoftwareComponent } from './software/software.component';
+import { EnviadoComponent } from './enviado/enviado.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },

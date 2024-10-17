@@ -1,0 +1,62 @@
+<mat-horizontal-stepper linear #stepper>
+  <mat-step [stepControl]="revendaForm">
+    <div class="step_container">
+      <div class="step_container_label">
+        <h2>Por favor, Informe o nome e o número de série do produto que deseja acionar a Garantia</h2>
+      </div>
+      <div class="step_container_content">
+        <form class="step_container_content__form"  [formGroup]="revendaForm">
+          <div class="step_container_content__form__itemData">
+            <mat-form-field>
+              <mat-label>Nome da Loja</mat-label>
+              <input type="text" matInput formControlName="nomeLoja" required>
+              <mat-error *ngIf="revendaForm.controls['nomeLoja'].hasError('required')">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>CNPJ</mat-label>
+              <input type="text" matInput formControlName="cnpj" required>
+              <mat-error *ngIf="revendaForm.controls['cnpj'].hasError('required')">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Site</mat-label>
+              <input type="text" matInput formControlName="site" placeholder="Opcional" >
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>WhatsApp</mat-label>
+              <input type="text" matInput formControlName="whatsapp" placeholder="Opcional">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Cidade/Estado</mat-label>
+              <input type="text" matInput formControlName="cidade"  required>
+              <mat-error *ngIf="revendaForm.controls['cidade'].hasError('required')">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label mat-label>Possui Inscrição Estadual? (IE) </mat-label>
+              <input type="text" matInput formControlName="inscricaoEstadual" required>
+              <mat-error *ngIf="revendaForm.controls['inscricaoEstadual'].hasError('required')">Campo obrigatório</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="step_container_content__form__itemField">
+            <mat-form-field class="form_textarea__input">
+              <mat-label>Quais marcas você gostaria de ser um revendedor?
+              </mat-label>
+              <textarea class="form_textarea__input" matInput formControlName="mensagemMarca" required></textarea>
+              <mat-error *ngIf="revendaForm.controls['mensagemMarca'].hasError('required')"> Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field class="form_textarea__input">
+              <mat-label>Observações Especiais</mat-label>
+              <textarea class="form_textarea__input" matInput formControlName="observacao" required placeholder="Opcional"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="step_container_content__form__button">
+            <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>
+            <button class="step_container_content__form__button__next" mat-button (click)="submit()">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step>
+    <app-enviado></app-enviado>
+  </mat-step>
+</mat-horizontal-stepper>

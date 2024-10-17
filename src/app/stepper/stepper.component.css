@@ -106,9 +106,10 @@
   color: red;
 }
 
-.step_container_options__back button:hover{
+.step_container_options__back button:hover, .step_container_options__buttons button:hover{
   background-color: red;
   color: white;
+  transition-duration: 0.5s;
 }
 
 

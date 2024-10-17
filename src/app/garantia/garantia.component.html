@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear>
+<mat-horizontal-stepper linear #stepper>
   <mat-step [stepControl]="garantiaForm">
     <div class="step_container">
       <div class="step_container_label">
@@ -33,8 +33,8 @@
         <form class="step_container_content__form" [formGroup]="garantiaForm2">
           <mat-form-field class="form_textarea__input">
             <mat-label>Mensagem</mat-label>
-            <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
-            <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+            <textarea class="form_textarea__input" matInput formControlName="descricao" required></textarea>
+            <mat-error *ngIf="garantiaForm2.controls['descricao'].hasError('required')"> Campo obrigatório</mat-error>
           </mat-form-field>
           <div class="step_container_content__form__button">
             <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
@@ -75,7 +75,7 @@
       <div class="step_container_textarea">
         <form class="step_container_content__form from_textarea" [formGroup]="garantiaForm4">
           <ngx-file-drop
-            (onFileDrop)="onFileDropped($event)"
+            (onFileDrop)="onFileDropped($event,'fotos')"
             (onFileOver)="fileOver($event)"
             (onFileLeave)="fileLeave($event)"
             [accept]="formats"
@@ -89,11 +89,11 @@
               </div>
             </ng-template>
           </ngx-file-drop>
-          <input type="file" #fileInput multiple (change)="onFilesSelected($event)" style="display: none;" />
-          <div *ngIf="files.length > 0">
+          <input type="file" #fileInput multiple (change)="onFilesSelected($event,'fotos')" style="display: none;" />
+          <div *ngIf="fotos.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
-              <li *ngFor="let file of files">{{ file.relativePath }}</li>
+              <li *ngFor="let file of fotos">{{ file.relativePath }}</li>
             </ul>
           </div>
           <div class="step_container_content__form__button">
@@ -113,7 +113,7 @@
       <div class="step_container_textarea">
         <form class="step_container_content__form from_textarea" [formGroup]="garantiaForm5">
           <ngx-file-drop
-            (onFileDrop)="onFileDropped($event)"
+            (onFileDrop)="onFileDropped($event,'notaFiscal')"
             (onFileOver)="fileOver($event)"
             (onFileLeave)="fileLeave($event)"
             [accept]="formats"
@@ -127,11 +127,11 @@
               </div>
             </ng-template>
           </ngx-file-drop>
-          <input type="file" #fileInput multiple (change)="onFilesSelected($event)" style="display: none;" />
-          <div *ngIf="files.length > 0">
+          <input type="file" #fileInput multiple (change)="onFilesSelected($event,'notaFiscal')" style="display: none;" />
+          <div *ngIf="notaFiscal.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
-              <li *ngFor="let file of files">{{ file.relativePath }}</li>
+              <li *ngFor="let file of notaFiscal">{{ file.relativePath }}</li>
             </ul>
           </div>
           <div class="step_container_content__form__button">
@@ -145,7 +145,7 @@
       </div>
     </div>
   </mat-step>
-  <mat-step [stepControl]="garantiaForm6">
+  <mat-step [stepControl]="garantiaForm6" *ngIf="selectedForm != 'enviado'">
     <div class="step_container">
       <div class="step_container_label">
         <h2>Por que sua Nota Fiscal não está disponível?</h2>
@@ -155,7 +155,7 @@
           <mat-form-field class="form_textarea__input">
             <mat-label>Mensagem</mat-label>
             <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
-            <mat-error *ngIf="garantiaForm2.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+            <mat-error *ngIf="garantiaForm6.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
           </mat-form-field>
           <div class="step_container_content__form__button">
             <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
@@ -165,5 +165,8 @@
       </div>
 
     </div>
+  </mat-step>
+  <mat-step *ngIf="selectedForm === 'enviado'">
+    <app-enviado></app-enviado>
   </mat-step>
 </mat-horizontal-stepper>

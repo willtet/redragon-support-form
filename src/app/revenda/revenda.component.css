@@ -33,7 +33,7 @@
 
 .step_container_content {
   margin: 3% auto;
-  width: 35%;
+  width: 50%;
 }
 
 .step_container_textarea{
@@ -55,6 +55,26 @@
   margin-top: 3%;
   display: flex;
   justify-content: space-between;
+}
+
+.step_container_content__form__itemData{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.step_container_content__form__itemData > mat-form-field{
+  flex: 1 1 30%;
+  margin: 10px;
+}
+
+.step_container_content__form__itemField{
+  display: flex;
+  justify-content: center;
+}
+
+.step_container_content__form__itemField > mat-form-field{
+  flex: 1 1 50%;
+  margin: 10px;
 }
 
 .step_container_content__form__button__next{
@@ -117,6 +137,7 @@
 }
 
 .form_textarea__input{
+  width: 45%;
   height: 200px;
 }
 

@@ -11,14 +11,17 @@
         <mat-form-field>
           <mat-label>Nome Completo</mat-label>
           <input matInput type="text" placeholder="Nome Completo" formControlName="nomeCompleto" required>
+          <mat-error *ngIf="firstFormGroup.controls['nomeCompleto'].hasError('required')">Campo obrigatório</mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>E-mail</mat-label>
           <input matInput type="email" placeholder="E-mail" formControlName="email" required>
+          <mat-error *ngIf="firstFormGroup.controls['email'].hasError('required')">Campo obrigatório</mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Telefone</mat-label>
           <input matInput type="text" placeholder="Telefone" formControlName="telefone" required>
+          <mat-error *ngIf="firstFormGroup.controls['telefone'].hasError('required')">Campo obrigatório</mat-error>
         </mat-form-field>
         <div class="bt_f">
           <button class="bt_f__index" mat-button matStepperNext>Enviar </button>
@@ -46,12 +49,18 @@
     <app-garantia [formGroup]="firstFormGroup" [stepper]="stepper"></app-garantia>
   </mat-step>
   <mat-step *ngIf="selectedForm === 'software'" >
-    <app-software [formGroup]="firstFormGroup"></app-software>
+    <app-software [formGroup]="firstFormGroup" [stepper]="stepper"></app-software>
   </mat-step>
   <mat-step *ngIf="selectedForm === 'duvidas'" >
-    <app-duvidas [formGroup]="firstFormGroup"></app-duvidas>
+    <app-duvidas [formGroup]="firstFormGroup" [stepper]="stepper"></app-duvidas>
   </mat-step>
-  <mat-step *ngIf="selectedForm === 'duvidas'" >
-    <app-duvidas [formGroup]="firstFormGroup"></app-duvidas>
+  <mat-step *ngIf="selectedForm === 'parcerias'" >
+    <app-parcerias [formGroup]="firstFormGroup" [stepper]="stepper"></app-parcerias>
+  </mat-step>
+  <mat-step *ngIf="selectedForm === 'revenda'" >
+    <app-revenda [formGroup]="firstFormGroup" [stepper]="stepper"></app-revenda>
+  </mat-step>
+  <mat-step *ngIf="selectedForm === 'outros'" >
+    <app-outros [formGroup]="firstFormGroup" [stepper]="stepper"></app-outros>
   </mat-step>
 </mat-horizontal-stepper>
