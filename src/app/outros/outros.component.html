@@ -5,7 +5,7 @@
         <h2>Por favor, descreva sua dúvida abaixo</h2>
       </div>
       <div class="step_container_content">
-        <form class="step_container_content__form" [formGroup]="outrosForm">
+        <form class="step_container_content__form" [formGroup]="outrosForm" (ngSubmit)="onSubmit()">
           <mat-form-field class="form_textarea__input">
             <mat-label>Mensagem</mat-label>
             <textarea class="form_textarea__input" matInput formControlName="duvida" required></textarea>
@@ -13,7 +13,7 @@
           </mat-form-field>
           <div class="step_container_content__form__button">
             <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>
-            <button class="step_container_content__form__button__next" mat-button (click)="submit()">Enviar</button>
+            <button class="step_container_content__form__button__next" mat-button >Enviar</button>
           </div>
         </form>
       </div>

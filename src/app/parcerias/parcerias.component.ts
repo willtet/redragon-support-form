@@ -9,6 +9,7 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from '../enviado/enviado.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { ApiService } from '../api-service.service';
 
 @Component({
   selector: 'app-parcerias',
@@ -113,9 +114,8 @@ export class ParceriasComponent {
     });
 
 
+    onSubmit(): void {
 
-
-    submit() {
       const parceria = {
           ...this.formGroup.value,
           ...this.parceriasForm.value,
@@ -128,56 +128,80 @@ export class ParceriasComponent {
           apresentacao: [],
       };
 
-      // Função para ler um arquivo e retornar como array de bytes
-      const readFileAsBytes = (file: File): Promise<{ name: string; type: string; size: number; bytes: Uint8Array }> => {
-          return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = (event) => {
-                  const arrayBuffer = event.target?.result as ArrayBuffer;
-                  const bytes = new Uint8Array(arrayBuffer);
-                  resolve({
-                      name: file.name,
-                      type: file.type,
-                      size: file.size,
-                      bytes: bytes
-                  });
-              };
-              reader.onerror = (error) => {
-                  reject(error);
-              };
-              reader.readAsArrayBuffer(file);
-          });
+      const readFileAsBytes = (file: File): Promise<{ name: string; type: string; size: number; base64: string }> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const arrayBuffer = event.target?.result as ArrayBuffer;
+                const bytes = new Uint8Array(arrayBuffer);
+
+                // Converte array de bytes para string base64
+                const binaryString = bytes.reduce((data, byte) => data + String.fromCharCode(byte), '');
+                const base64String = btoa(binaryString);
+
+                resolve({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    base64: base64String
+                });
+            };
+            reader.onerror = (error) => {
+                reject(error);
+            };
+            reader.readAsArrayBuffer(file);
+        });
       };
 
       // Lê arquivos de fotos
       const apresentacaoPromises = this.apresentacao.map((file: NgxFileDropEntry) => {
-          if (file.fileEntry.isFile) {
-            const fileEntry = file.fileEntry as FileSystemFileEntry;
-            return fileEntry.file((realFile: File) => {
-                return readFileAsBytes(realFile).then((fileData) => {
-                    response.apresentacao.push(fileData);
-                });
-            });
-          }
-          return Promise.resolve();
+          return new Promise<void>((resolve, reject) => {
+              if (file.fileEntry.isFile) {
+                  const fileEntry = file.fileEntry as FileSystemFileEntry;
+                  fileEntry.file((realFile: File) => {
+                      readFileAsBytes(realFile)
+                          .then((fileData) => {
+                              response.apresentacao.push(fileData);
+                              resolve();
+                          })
+                          .catch(error => reject(error));
+                  });
+              } else {
+                  resolve(); // Se não for um arquivo, resolve imediatamente.
+              }
+          });
       });
 
       // Espera que todos os arquivos sejam lidos
-      Promise.all([...apresentacaoPromises]).then(() => {
+      Promise.all(apresentacaoPromises).then(() => {
           // Enviar a resposta para o backend ou para onde for necessário
           console.log(response); // Verificar a estrutura do objeto
 
-
+          if (this.formGroup.valid) {  // Checa a validade do formGroup
+              // Se o formulário for válido, envie os dados para o backend
+              this.apiService.enviarDados(response).subscribe({
+                  next: (response) => {
+                      // Manipular resposta do backend
+                  },
+                  error: (err) => {
+                      console.error('Erro ao enviar dados:', err);
+                  }
+              });
+          } else {
+              console.error('Formulário inválido');
+          }
+      }).catch(error => {
+          console.error('Erro ao processar arquivos:', error);
       });
-
 
       this.selectedForm = 'enviado';
       this.cdr.detectChanges();
       this.stepperChild.next();
-    }
+  }
 
 
     constructor(
       private _formBuilder: FormBuilder,
-      private cdr: ChangeDetectorRef) {}
+      private cdr: ChangeDetectorRef,
+      private apiService: ApiService) {}
 }

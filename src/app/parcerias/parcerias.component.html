@@ -25,7 +25,7 @@
         <h2>Caso tenha, envie um Midiakit ou Apresentação</h2>
       </div>
       <div class="step_container_textarea">
-        <form class="step_container_content__form from_textarea" [formGroup]="parceriasForm2">
+        <form class="step_container_content__form from_textarea" [formGroup]="parceriasForm2" (submit)="onSubmit()">
           <ngx-file-drop
             (onFileDrop)="onFileDropped($event,'apresentacao')"
             (onFileOver)="fileOver($event)"
@@ -52,7 +52,7 @@
             <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
             <div class="step_container_content__form__button__child">
               <button class="step_container_content__form__button__middle " mat-button matStepperNext>Não tenho</button>
-              <button type="submit" class="step_container_content__form__button__next" mat-button (click)="submit()">Enviar</button>
+              <button type="submit" class="step_container_content__form__button__next" mat-button>Enviar</button>
             </div>
           </div>
         </form>
