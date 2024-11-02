@@ -10,6 +10,8 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 import { CommonModule, Location  } from '@angular/common';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from "../enviado/enviado.component";
+import { ApiService } from '../api-service.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-garantia',
@@ -24,7 +26,8 @@ import { EnviadoComponent } from "../enviado/enviado.component";
     MatDatepickerModule,
     CommonModule,
     NgxFileDropModule,
-    EnviadoComponent
+    EnviadoComponent,
+    MatIconModule
   ],
   templateUrl: './garantia.component.html',
   styleUrl: './garantia.component.css',
@@ -37,6 +40,7 @@ export class GarantiaComponent {
   @Input({required: true}) stepper!: MatStepper;
   public fotos: NgxFileDropEntry[] = [];
   public notaFiscal: NgxFileDropEntry[] = [];
+  public fileLimitExceeded: boolean = false;
 
   public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
   public selectedForm: string | null = null;
@@ -58,6 +62,14 @@ export class GarantiaComponent {
   }
 
   public onFileDropped(files: NgxFileDropEntry[], fileType: 'fotos' | 'notaFiscal') {
+    const maxFiles = 3;
+
+    if ((fileType === 'fotos' && this.fotos.length >= maxFiles) || (fileType === 'notaFiscal' && this.notaFiscal.length >= maxFiles)) {
+      console.warn('Limite de arquivos atingido.');
+      this.fileLimitExceeded = true; // Ativa a mensagem de limite
+      return;
+    }
+
   for (const droppedFile of files) {
     if (droppedFile.fileEntry.isFile) {
       const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
@@ -78,6 +90,8 @@ export class GarantiaComponent {
       console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
     }
   }
+
+  this.fileLimitExceeded = false;
 }
 
   public fileOver(event: any) {
@@ -94,6 +108,13 @@ export class GarantiaComponent {
   }
 
   public onFilesSelected(event: any, fileType: 'fotos' | 'notaFiscal'): void {
+    const maxFiles = 3;
+
+    if ((fileType === 'fotos' && this.fotos.length >= maxFiles) || (fileType === 'notaFiscal' && this.notaFiscal.length >= maxFiles)) {
+      this.fileLimitExceeded = true; // Ativa a mensagem de limite
+      return;
+    }
+
     const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
       return {
         fileEntry: {
@@ -107,6 +128,23 @@ export class GarantiaComponent {
     });
 
     this.onFileDropped(files, fileType);
+    this.fileLimitExceeded = false;
+  }
+
+
+  public removeFile(fileName: string, fileType: 'fotos' | 'notaFiscal'): void {
+    if (fileType === 'fotos') {
+      this.fotos = this.fotos.filter(file => file.relativePath !== fileName); // Remove o arquivo de fotos
+    } else if (fileType === 'notaFiscal') {
+      this.notaFiscal = this.notaFiscal.filter(file => file.relativePath !== fileName); // Remove o arquivo de nota fiscal
+    }
+
+    // Se o limite foi excedido anteriormente, reseta a mensagem
+    if (this.fileLimitExceeded && (this.fotos.length < 3 && this.notaFiscal.length < 3)) {
+      this.fileLimitExceeded = false;
+    }
+
+    this.cdr.detectChanges(); // Atualiza a view
   }
 
 
@@ -114,8 +152,8 @@ export class GarantiaComponent {
 
 
   garantiaForm = this._formBuilder.group({
-    nome: ['a', Validators.required],
-    serie: ['a', Validators.required],
+    nomeProduto: ['', Validators.required],
+    serieProduto: ['', Validators.required],
   });
 
   public garantiaForm2 = this._formBuilder.group({
@@ -161,25 +199,29 @@ export class GarantiaComponent {
         notaFiscal: []
     };
 
-    // Função para ler um arquivo e retornar como array de bytes
-    const readFileAsBytes = (file: File): Promise<{ name: string; type: string; size: number; bytes: Uint8Array }> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const arrayBuffer = event.target?.result as ArrayBuffer;
-                const bytes = new Uint8Array(arrayBuffer);
-                resolve({
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    bytes: bytes
-                });
-            };
-            reader.onerror = (error) => {
-                reject(error);
-            };
-            reader.readAsArrayBuffer(file);
-        });
+    const readFileAsBytes = (file: File): Promise<{ name: string; type: string; size: number; base64: string }> => {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+              const arrayBuffer = event.target?.result as ArrayBuffer;
+              const bytes = new Uint8Array(arrayBuffer);
+
+              // Converte array de bytes para string base64
+              const binaryString = bytes.reduce((data, byte) => data + String.fromCharCode(byte), '');
+              const base64String = btoa(binaryString);
+
+              resolve({
+                  name: file.name,
+                  type: file.type,
+                  size: file.size,
+                  base64: base64String
+              });
+          };
+          reader.onerror = (error) => {
+              reject(error);
+          };
+          reader.readAsArrayBuffer(file);
+      });
     };
 
     // Lê arquivos de fotos
@@ -212,7 +254,19 @@ export class GarantiaComponent {
     Promise.all([...fotoPromises, ...notaFiscalPromises]).then(() => {
         // Enviar a resposta para o backend ou para onde for necessário
         console.log(response); // Verificar a estrutura do objeto
-
+        if (this.formGroup.valid) {  // Checa a validade do formGroup
+          // Se o formulário for válido, envie os dados para o backend
+          this.apiService.enviarGarantia(response).subscribe({
+              next: (response) => {
+                  // Manipular resposta do backend
+              },
+              error: (err) => {
+                  console.error('Erro ao enviar dados:', err);
+              }
+          });
+      } else {
+          console.error('Formulário inválido');
+      }
 
     });
 
@@ -224,5 +278,6 @@ export class GarantiaComponent {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService) {}
 }

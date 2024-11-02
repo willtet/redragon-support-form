@@ -12,7 +12,33 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   // Método para enviar os dados do formulário para o backend
-  enviarDados(dados: any): Observable<any> {
+  enviarGarantia(dados: any): Observable<any> {
+    this.apiUrl.concat("/garantia")
     return this.http.post<any>(this.apiUrl, dados);
+  }
+
+  enviarSoftware(dados: any): Observable<any> {
+    this.apiUrl.concat("/software")
+    return this.http.post<any>(this.apiUrl, dados);
+  }
+
+  enviarDuvida(dados: any): Observable<any> {
+    this.apiUrl.concat("/duvida")
+    return this.http.post<any>(this.apiUrl, dados);
+  }
+
+  enviarParceria(dados: any): Observable<any> {
+    this.apiUrl.concat("/parceria")
+    return this.http.post<any>(this.apiUrl, dados);
+  }
+
+  enviarRevenda(dados: any): Observable<any> {
+    this.apiUrl.concat("/revenda")
+    return this.http.post<any>(this.apiUrl, dados);
+  }
+
+  enviarOutros(dados: any): Observable<any> {
+    console.log(dados)
+    return this.http.post<any>(this.apiUrl.concat("/outros"), dados);
   }
 }

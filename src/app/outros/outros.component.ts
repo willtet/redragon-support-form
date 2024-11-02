@@ -66,9 +66,17 @@ export class OutrosComponent {
 
 
   onSubmit(): void {
+
+    const outros = {
+      ...this.formGroup.value,
+      ...this.outrosForm.value
+    };
+
+    console.log(outros)
+
     if (this.formGroup.valid) {
       // Se o formulário for válido, envie os dados para o backend
-      this.apiService.enviarDados(this.formGroup.value).subscribe({
+      this.apiService.enviarOutros(outros).subscribe({
         next: (response) => {
 
         },

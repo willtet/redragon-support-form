@@ -158,3 +158,18 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+.file-limit-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.remove-button {
+  color: red; /* Cor do botão */
+}
+
+.remove-button mat-icon {
+  font-size: 18px; /* Tamanho do ícone */
+}
+

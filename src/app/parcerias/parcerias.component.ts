@@ -179,7 +179,7 @@ export class ParceriasComponent {
 
           if (this.formGroup.valid) {  // Checa a validade do formGroup
               // Se o formulário for válido, envie os dados para o backend
-              this.apiService.enviarDados(response).subscribe({
+              this.apiService.enviarParceria(response).subscribe({
                   next: (response) => {
                       // Manipular resposta do backend
                   },

@@ -1,0 +1,41 @@
+.container{
+  width: 60%;
+  margin: auto;
+}
+
+.container > *{
+  text-align: center;
+  margin: auto;
+}
+
+.container > h2{
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 43.88px;
+}
+
+.img_box > *{
+  margin: auto;
+}
+
+.txt_box > p{
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 24px;
+}
+
+.txt_box > p >span{
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 24px;
+}
+
+.txt_box__second{
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 24.38px !important;
+  text-align: center;
+
+}
+
+
