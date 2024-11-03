@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { ApiService } from '../api-service.service';
 
 @Component({
   selector: 'app-revenda',
@@ -38,7 +39,7 @@ export class RevendaComponent {
     nomeLoja: ['a', Validators.required],
     cnpj: ['a', Validators.required],
     site: ['a'],
-    whatsapp: ['a', Validators.required],
+    whatsapp: ['a'],
     cidade: ['a', Validators.required],
     inscricaoEstadual: ['a', Validators.required],
     mensagemMarca: ['a', Validators.required],
@@ -64,9 +65,36 @@ export class RevendaComponent {
     this.stepperChild.next();
   }
 
+  onSubmit(): void {
+
+    const revenda = {
+      ...this.formGroup.value,
+      ...this.revendaForm.value
+    };
+
+    console.log(revenda)
+
+    if (this.revendaForm.valid && this.formGroup.valid) {
+      // Se o formulário for válido, envie os dados para o backend
+      this.apiService.enviarRevenda(revenda).subscribe({
+        next: (response) => {
+
+        },
+        error: (err) => {
+          console.error('Erro ao enviar dados:', err);
+        }
+      });
+    } else {
+      console.error('Formulário inválido');
+    }
+
+    this.stepperChild.next();
+  }
+
 
 
   constructor(
     private _formBuilder: FormBuilder,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService) {}
 }

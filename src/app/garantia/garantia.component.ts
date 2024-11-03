@@ -102,32 +102,47 @@ export class GarantiaComponent {
     console.log('Arquivo saiu da área de drop:', event);
   }
 
-  public openFileSelector(event: any): void {
-    event.preventDefault()
+  public openFileSelector(event: Event, fileType: 'fotos' | 'notaFiscal'): void {
+    event.preventDefault();
+    this.fileInput.nativeElement.onchange = (e: any) => {
+        this.onFilesSelected(e, fileType);
+    };
     this.fileInput.nativeElement.click();
-  }
+}
 
   public onFilesSelected(event: any, fileType: 'fotos' | 'notaFiscal'): void {
     const maxFiles = 3;
 
     if ((fileType === 'fotos' && this.fotos.length >= maxFiles) || (fileType === 'notaFiscal' && this.notaFiscal.length >= maxFiles)) {
-      this.fileLimitExceeded = true; // Ativa a mensagem de limite
-      return;
+        this.fileLimitExceeded = true; // Ativa a mensagem de limite
+        return;
     }
 
     const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
-      return {
-        fileEntry: {
-          isFile: true,
-          isDirectory: false,
-          name: file.name,
-          file: (callback: (file: File) => void) => callback(file),
-        } as FileSystemFileEntry,
-        relativePath: file.name
-      };
+        return {
+            fileEntry: {
+                isFile: true,
+                isDirectory: false,
+                name: file.name,
+                file: (callback: (file: File) => void) => callback(file),
+            } as FileSystemFileEntry,
+            relativePath: file.name
+        };
     });
 
-    this.onFileDropped(files, fileType);
+    // Filtra arquivos duplicados
+    const filteredFiles = files.filter(newFile => {
+        const fileName = newFile.relativePath;
+        if (fileType === 'fotos') {
+            return !this.fotos.some(existingFile => existingFile.relativePath === fileName);
+        } else if (fileType === 'notaFiscal') {
+            return !this.notaFiscal.some(existingFile => existingFile.relativePath === fileName);
+        }
+        return true;
+    });
+
+    // Adiciona apenas os arquivos filtrados (sem duplicatas)
+    this.onFileDropped(filteredFiles, fileType);
     this.fileLimitExceeded = false;
   }
 
@@ -152,24 +167,24 @@ export class GarantiaComponent {
 
 
   garantiaForm = this._formBuilder.group({
-    nomeProduto: ['', Validators.required],
-    serieProduto: ['', Validators.required],
+    nomeProduto: ['garantiaNomeProduto', Validators.required],
+    serieProduto: ['garantiaSerieProduto', Validators.required],
   });
 
   public garantiaForm2 = this._formBuilder.group({
-    descricao: ['teste', Validators.required]
+    descricao: ['descricao', Validators.required]
   });
 
   garantiaForm3 = this._formBuilder.group({
-    dataCompra: ['a', Validators.required]
+    dataCompra: ['', Validators.required]
   });
 
   garantiaForm4 = this._formBuilder.group({
-    file: ['']
+    fotos: ['']
   });
 
   garantiaForm5 = this._formBuilder.group({
-    file: ['']
+    notaFiscal: ['']
   });
 
   garantiaForm6 = this._formBuilder.group({
@@ -184,6 +199,9 @@ export class GarantiaComponent {
   readonly maxDate = new Date();
 
   submit() {
+
+
+
     const garantia = {
         ...this.formGroup.value,
         ...this.garantiaForm.value,

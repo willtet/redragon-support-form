@@ -10,6 +10,8 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from '../enviado/enviado.component';
+import { ApiService } from '../api-service.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-software',
@@ -25,7 +27,8 @@ import { EnviadoComponent } from '../enviado/enviado.component';
     MatDatepickerModule,
     CommonModule,
     NgxFileDropModule,
-    EnviadoComponent
+    EnviadoComponent,
+    MatIconModule
   ],
   templateUrl: './software.component.html',
   styleUrl: './software.component.css',
@@ -38,6 +41,7 @@ export class SoftwareComponent {
   @Input({required: true}) stepper!: MatStepper;
   public fotos: NgxFileDropEntry[] = [];
   public problema: NgxFileDropEntry[] = [];
+  public fileLimitExceeded: boolean = false;
 
   public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
   public selectedForm: string | null = null;
@@ -59,68 +63,117 @@ export class SoftwareComponent {
   }
 
   public onFileDropped(files: NgxFileDropEntry[], fileType: 'fotos' | 'problema') {
-    for (const droppedFile of files) {
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-        fileEntry.file((file: File) => {
-          const fileExtension = file.name.split('.').pop()?.toLowerCase();
-          if (this.allowedExtensions.includes(fileExtension || '')) {
-            if (fileType === 'fotos') {
-              this.fotos.push(droppedFile); // Adiciona à lista de fotos
-            } else if (fileType === 'problema') {
-              this.problema.push(droppedFile); // Adiciona à lista de nota fiscal
-            }
-          } else {
-            console.warn(`Arquivo com extensão .${fileExtension} não permitido.`);
+    const maxFiles = 3;
+
+    if ((fileType === 'fotos' && this.fotos.length >= maxFiles) || (fileType === 'problema' && this.problema.length >= maxFiles)) {
+      console.warn('Limite de arquivos atingido.');
+      this.fileLimitExceeded = true; // Ativa a mensagem de limite
+      return;
+    }
+
+  for (const droppedFile of files) {
+    if (droppedFile.fileEntry.isFile) {
+      const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+      fileEntry.file((file: File) => {
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+        if (this.allowedExtensions.includes(fileExtension || '')) {
+          if (fileType === 'fotos') {
+            this.fotos.push(droppedFile); // Adiciona à lista de fotos
+          } else if (fileType === 'problema') {
+            this.problema.push(droppedFile); // Adiciona à lista de nota fiscal
           }
-          this.cdr.detectChanges();
-        });
-      } else {
-        console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
-      }
+        } else {
+          console.warn(`Arquivo com extensão .${fileExtension} não permitido.`);
+        }
+        this.cdr.detectChanges();
+      });
+    } else {
+      console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
     }
   }
 
-    public fileOver(event: any) {
-      console.log('Arquivo sobre a área de drop:', event);
+  this.fileLimitExceeded = false;
+}
+
+  public fileOver(event: any) {
+    console.log('Arquivo sobre a área de drop:', event);
+  }
+
+  public fileLeave(event: any) {
+    console.log('Arquivo saiu da área de drop:', event);
+  }
+
+  public openFileSelector(event: Event, fileType: 'fotos' | 'problema'): void {
+    event.preventDefault();
+    this.fileInput.nativeElement.onchange = (e: any) => {
+        this.onFilesSelected(e, fileType);
+    };
+    this.fileInput.nativeElement.click();
+}
+
+  public onFilesSelected(event: any, fileType: 'fotos' | 'problema'): void {
+    const maxFiles = 3;
+
+    if ((fileType === 'fotos' && this.fotos.length >= maxFiles) || (fileType === 'problema' && this.problema.length >= maxFiles)) {
+        this.fileLimitExceeded = true; // Ativa a mensagem de limite
+        return;
     }
 
-    public fileLeave(event: any) {
-      console.log('Arquivo saiu da área de drop:', event);
-    }
-
-    public openFileSelector(event: any): void {
-      event.preventDefault()
-      this.fileInput.nativeElement.click();
-    }
-
-    public onFilesSelected(event: any, fileType: 'fotos' | 'problema'): void {
-      const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
+    const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
         return {
-          fileEntry: {
-            isFile: true,
-            isDirectory: false,
-            name: file.name,
-            file: (callback: (file: File) => void) => callback(file),
-          } as FileSystemFileEntry,
-          relativePath: file.name
+            fileEntry: {
+                isFile: true,
+                isDirectory: false,
+                name: file.name,
+                file: (callback: (file: File) => void) => callback(file),
+            } as FileSystemFileEntry,
+            relativePath: file.name
         };
-      });
+    });
 
-      this.onFileDropped(files, fileType);
+    // Filtra arquivos duplicados
+    const filteredFiles = files.filter(newFile => {
+        const fileName = newFile.relativePath;
+        if (fileType === 'fotos') {
+            return !this.fotos.some(existingFile => existingFile.relativePath === fileName);
+        } else if (fileType === 'problema') {
+            return !this.problema.some(existingFile => existingFile.relativePath === fileName);
+        }
+        return true;
+    });
+
+    // Adiciona apenas os arquivos filtrados (sem duplicatas)
+    this.onFileDropped(filteredFiles, fileType);
+    this.fileLimitExceeded = false;
+  }
+
+
+  public removeFile(fileName: string, fileType: 'fotos' | 'problema'): void {
+    if (fileType === 'fotos') {
+      this.fotos = this.fotos.filter(file => file.relativePath !== fileName); // Remove o arquivo de fotos
+    } else if (fileType === 'problema') {
+      this.problema = this.problema.filter(file => file.relativePath !== fileName); // Remove o arquivo de nota fiscal
     }
+
+    // Se o limite foi excedido anteriormente, reseta a mensagem
+    if (this.fileLimitExceeded && (this.fotos.length < 3 && this.problema.length < 3)) {
+      this.fileLimitExceeded = false;
+    }
+
+    this.cdr.detectChanges(); // Atualiza a view
+  }
 
 
 
 
 
   softwareForm = this._formBuilder.group({
-    nome: ['a', Validators.required],
-    serie: ['a', Validators.required],
+    nomeProduto: ['a', Validators.required],
+    serieProduto: ['a', Validators.required],
   });
 
   softwareForm2 = this._formBuilder.group({
-    file: ['']
+    fotos: ['']
   });
 
   softwareForm3 = this._formBuilder.group({
@@ -128,26 +181,26 @@ export class SoftwareComponent {
   });
 
   softwareForm4 = this._formBuilder.group({
-    mensagemSpec: ['a', Validators.required]
+    mensagemSpec: ['', Validators.required]
   });
 
   softwareForm5 = this._formBuilder.group({
   });
 
   softwareForm6 = this._formBuilder.group({
-    mensagem: ['a', Validators.required]
+    mensagemProblema: ['', Validators.required]
   });
 
   softwareForm7 = this._formBuilder.group({
-    file: []
+    problema: []
   });
 
   softwareForm8 = this._formBuilder.group({
-    problema: ['a', Validators.required]
+    comecoProblema: ['a', Validators.required]
   });
 
   softwareForm9 = this._formBuilder.group({
-    mudancaOS: ['a', Validators.required]
+    mudancaOS: ['', Validators.required]
   });
 
 
@@ -175,17 +228,22 @@ export class SoftwareComponent {
         problema: []
     };
 
-    const readFileAsBytes = (file: File): Promise<{ name: string; type: string; size: number; bytes: Uint8Array }> => {
+    const readFileAsBytes = (file: File): Promise<{ name: string; type: string; size: number; base64: string }> => {
       return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = (event) => {
               const arrayBuffer = event.target?.result as ArrayBuffer;
               const bytes = new Uint8Array(arrayBuffer);
+
+              // Converte array de bytes para string base64
+              const binaryString = bytes.reduce((data, byte) => data + String.fromCharCode(byte), '');
+              const base64String = btoa(binaryString);
+
               resolve({
                   name: file.name,
                   type: file.type,
                   size: file.size,
-                  bytes: bytes
+                  base64: base64String
               });
           };
           reader.onerror = (error) => {
@@ -197,45 +255,58 @@ export class SoftwareComponent {
 
     // Lê arquivos de fotos
     const fotoPromises = this.fotos.map((file: NgxFileDropEntry) => {
-      if (file.fileEntry.isFile) {
-        const fileEntry = file.fileEntry as FileSystemFileEntry;
-        return fileEntry.file((realFile: File) => {
-            return readFileAsBytes(realFile).then((fileData) => {
-                response.fotos.push(fileData);
-            });
-        });
-      }
-      return Promise.resolve();
-  });
-
-  // Lê arquivos de nota fiscal e adiciona como bytes
-  const problemaPromises = this.problema.map((file: NgxFileDropEntry) => {
-      if (file.fileEntry.isFile) {
+        if (file.fileEntry.isFile) {
           const fileEntry = file.fileEntry as FileSystemFileEntry;
           return fileEntry.file((realFile: File) => {
               return readFileAsBytes(realFile).then((fileData) => {
-                  response.problema.push(fileData);
+                  response.fotos.push(fileData);
               });
           });
+        }
+        return Promise.resolve();
+    });
+
+    // Lê arquivos de nota fiscal e adiciona como bytes
+    const problemaPromises = this.problema.map((file: NgxFileDropEntry) => {
+        if (file.fileEntry.isFile) {
+            const fileEntry = file.fileEntry as FileSystemFileEntry;
+            return fileEntry.file((realFile: File) => {
+                return readFileAsBytes(realFile).then((fileData) => {
+                    response.problema.push(fileData);
+                });
+            });
+        }
+        return Promise.resolve();
+    });
+
+    // Espera que todos os arquivos sejam lidos
+    Promise.all([...fotoPromises, ...problemaPromises]).then(() => {
+        // Enviar a resposta para o backend ou para onde for necessário
+        console.log(response); // Verificar a estrutura do objeto
+        if (this.formGroup.valid) {  // Checa a validade do formGroup
+          // Se o formulário for válido, envie os dados para o backend
+          this.apiService.enviarSoftware(response).subscribe({
+              next: (response) => {
+                  // Manipular resposta do backend
+              },
+              error: (err) => {
+                  console.error('Erro ao enviar dados:', err);
+              }
+          });
+      } else {
+          console.error('Formulário inválido');
       }
-      return Promise.resolve();
-  });
 
-  // Espera que todos os arquivos sejam lidos
-  Promise.all([...fotoPromises, ...problemaPromises]).then(() => {
-      // Enviar a resposta para o backend ou para onde for necessário
-      console.log(response); // Verificar a estrutura do objeto
-      this.selectedForm = 'enviado';
-      this.cdr.detectChanges();
-      this.stepperChild.next();
-
-  });
+    });
 
 
-
+    this.selectedForm = 'enviado';
+    this.cdr.detectChanges();
+    this.stepperChild.next();
   }
 
 
   constructor(private _formBuilder: FormBuilder,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService) {}
 }

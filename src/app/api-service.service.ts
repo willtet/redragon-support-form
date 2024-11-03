@@ -13,8 +13,7 @@ export class ApiService {
 
   // Método para enviar os dados do formulário para o backend
   enviarGarantia(dados: any): Observable<any> {
-    this.apiUrl.concat("/garantia")
-    return this.http.post<any>(this.apiUrl, dados);
+    return this.http.post<any>(this.apiUrl.concat("/garantia"), dados);
   }
 
   enviarSoftware(dados: any): Observable<any> {
@@ -28,13 +27,11 @@ export class ApiService {
   }
 
   enviarParceria(dados: any): Observable<any> {
-    this.apiUrl.concat("/parceria")
-    return this.http.post<any>(this.apiUrl, dados);
+    return this.http.post<any>(this.apiUrl.concat("/parceria"), dados);
   }
 
   enviarRevenda(dados: any): Observable<any> {
-    this.apiUrl.concat("/revenda")
-    return this.http.post<any>(this.apiUrl, dados);
+    return this.http.post<any>(this.apiUrl.concat("/revenda"), dados);
   }
 
   enviarOutros(dados: any): Observable<any> {

@@ -8,13 +8,13 @@
         <form class="step_container_content__form"  [formGroup]="softwareForm">
           <mat-form-field>
             <mat-label>Nome</mat-label>
-            <input type="text" matInput formControlName="nome" placeholder="Nome" required>
-            <mat-error *ngIf="softwareForm.controls['nome'].hasError('required')">Campo obrigatório</mat-error>
+            <input type="text" matInput formControlName="nomeProduto" placeholder="Nome" required>
+            <mat-error *ngIf="softwareForm.controls['nomeProduto'].hasError('required')">Campo obrigatório</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Série</mat-label>
-            <input type="text" matInput formControlName="serie" placeholder="Série" required>
-            <mat-error *ngIf="softwareForm.controls['serie'].hasError('required')">Campo obrigatório</mat-error>
+            <input type="text" matInput formControlName="serieProduto" placeholder="Série" required>
+            <mat-error *ngIf="softwareForm.controls['serieProduto'].hasError('required')">Campo obrigatório</mat-error>
           </mat-form-field>
           <div class="step_container_content__form__button">
             <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>
@@ -42,7 +42,7 @@
             <ng-template ngx-file-drop-content-tmp>
               <div class="file-drop-content step_textarea">
                 <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-                <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event)">procurar</a></p>
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event, 'fotos')">procurar</a></p>
                 <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
               </div>
             </ng-template>
@@ -51,7 +51,14 @@
           <div *ngIf="fotos.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
-              <li *ngFor="let file of fotos">{{ file.relativePath }}</li>
+              <li *ngFor="let file of fotos" class="file-item">
+                <div class="file-info">
+                  {{ file.relativePath }}
+                </div>
+                <button mat-icon-button class="remove-button" (click)="removeFile(file.relativePath, 'fotos')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </li>
             </ul>
           </div>
           <div class="step_container_content__form__button">
@@ -124,8 +131,8 @@
           <form class="step_container_content__form" [formGroup]="softwareForm6">
             <mat-form-field class="form_textarea__input">
               <mat-label>Mensagem</mat-label>
-              <textarea class="form_textarea__input" matInput formControlName="mensagem" required></textarea>
-              <mat-error *ngIf="softwareForm6.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
+              <textarea class="form_textarea__input" matInput formControlName="mensagemProblema" required></textarea>
+              <mat-error *ngIf="softwareForm6.controls['mensagemProblema'].hasError('required')"> Campo obrigatório</mat-error>
             </mat-form-field>
             <div class="step_container_content__form__button">
               <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
@@ -138,12 +145,13 @@
     <mat-step [stepControl]="softwareForm7">
       <div class="step_container">
         <div class="step_container_label">
-          <h2>Envie um print ou imagem do problema</h2>
+          <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
+          <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
         </div>
         <div class="step_container_textarea">
-          <form class="step_container_content__form from_textarea" [formGroup]="softwareForm7">
+          <form class="step_container_content__form from_textarea" [formGroup]="softwareForm2">
             <ngx-file-drop
-              (onFileDrop)="onFileDropped($event, 'problema')"
+              (onFileDrop)="onFileDropped($event,'problema')"
               (onFileOver)="fileOver($event)"
               (onFileLeave)="fileLeave($event)"
               [accept]="formats"
@@ -152,15 +160,23 @@
               <ng-template ngx-file-drop-content-tmp>
                 <div class="file-drop-content step_textarea">
                   <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-                  <p>Solte os arquivos para fazer <br/> upload ou <a href="">procurar</a></p>
+                  <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event, 'problema')">procurar</a></p>
                   <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
                 </div>
               </ng-template>
             </ngx-file-drop>
+            <input type="file" #fileInput multiple (change)="onFilesSelected($event,'problema')" style="display: none;" />
             <div *ngIf="problema.length > 0">
               <h3>Arquivos aceitos:</h3>
               <ul>
-                <li *ngFor="let file of problema">{{ file.relativePath }}</li>
+                <li *ngFor="let file of problema" class="file-item">
+                  <div class="file-info">
+                    {{ file.relativePath }}
+                  </div>
+                  <button mat-icon-button class="remove-button" (click)="removeFile(file.relativePath, 'problema')">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </li>
               </ul>
             </div>
             <div class="step_container_content__form__button">
@@ -180,8 +196,8 @@
           <form class="step_container_content__form" [formGroup]="softwareForm8">
             <mat-form-field class="form_textarea__input">
               <mat-label>Mensagem</mat-label>
-              <textarea class="form_textarea__input" matInput formControlName="problema" required></textarea>
-              <mat-error *ngIf="softwareForm8.controls['problema'].hasError('required')"> Campo obrigatório</mat-error>
+              <textarea class="form_textarea__input" matInput formControlName="comecoProblema" required></textarea>
+              <mat-error *ngIf="softwareForm8.controls['comecoProblema'].hasError('required')"> Campo obrigatório</mat-error>
             </mat-form-field>
             <div class="step_container_content__form__button">
               <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>

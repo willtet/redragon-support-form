@@ -46,9 +46,9 @@ export class StepperComponent {
 
 
     this.firstFormGroup = this._formBuilder.group({
-      nomeCompleto: ['', Validators.required],
-      email: ['', Validators.required],
-      telefone: ['', Validators.required],
+      nomeCompleto: ['Willian', Validators.required],
+      email: ['williantet@gmail.com', Validators.required],
+      telefone: ['11984916483', Validators.required],
     });
   }
 

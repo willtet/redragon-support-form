@@ -165,6 +165,18 @@
   margin-top: 10px;
 }
 
+
+.file-item {
+  display: flex;
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: space-between; /* Distribui espaço entre o texto e o botão */
+  margin: 5px 0; /* Espaçamento entre os itens */
+}
+
+.file-info {
+  flex: 1; /* Faz o texto ocupar o espaço disponível */
+}
+
 .remove-button {
   color: red; /* Cor do botão */
 }

@@ -84,7 +84,7 @@
             <ng-template ngx-file-drop-content-tmp>
               <div class="file-drop-content step_textarea">
                 <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-                <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event)">procurar</a></p>
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event, 'fotos')">procurar</a></p>
                 <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
               </div>
             </ng-template>
@@ -93,8 +93,10 @@
           <div *ngIf="fotos.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
-              <li *ngFor="let file of fotos">
-                {{ file.relativePath }}
+              <li *ngFor="let file of fotos" class="file-item">
+                <div class="file-info">
+                  {{ file.relativePath }}
+                </div>
                 <button mat-icon-button class="remove-button" (click)="removeFile(file.relativePath, 'fotos')">
                   <mat-icon>close</mat-icon>
                 </button>
@@ -130,7 +132,7 @@
             <ng-template ngx-file-drop-content-tmp>
               <div class="file-drop-content step_textarea">
                 <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-                <p>Solte os arquivos para fazer <br/> upload ou <a (click)="openFileSelector($event)">procurar</a></p>
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event, 'notaFiscal')">procurar</a></p>
                 <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
               </div>
             </ng-template>
@@ -139,7 +141,14 @@
           <div *ngIf="notaFiscal.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
-              <li *ngFor="let file of notaFiscal">{{ file.relativePath }}</li>
+              <li *ngFor="let file of notaFiscal" class="file-item">
+                <div class="file-info">
+                  {{ file.relativePath }}
+                </div>
+                <button mat-icon-button class="remove-button" (click)="removeFile(file.relativePath, 'notaFiscal')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </li>
             </ul>
           </div>
           <div *ngIf="fileLimitExceeded && notaFiscal.length >= 3" class="file-limit-message">
