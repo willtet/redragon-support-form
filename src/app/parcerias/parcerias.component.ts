@@ -10,6 +10,7 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from '../enviado/enviado.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ApiService } from '../api-service.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-parcerias',
@@ -25,7 +26,8 @@ import { ApiService } from '../api-service.service';
     MatDatepickerModule,
     CommonModule,
     NgxFileDropModule,
-    EnviadoComponent
+    EnviadoComponent,
+    MatIconModule
 
   ],
   templateUrl: './parcerias.component.html',
@@ -38,6 +40,7 @@ export class ParceriasComponent {
   @Input({required: true}) formGroup!: FormGroup;
   @Input({required: true}) stepper!: MatStepper;
   public apresentacao: NgxFileDropEntry[] = [];
+  public fileLimitExceeded: boolean = false;
 
   public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
   public selectedForm: string | null = null;
@@ -55,54 +58,101 @@ export class ParceriasComponent {
   }
 
   public onFileDropped(files: NgxFileDropEntry[], fileType: 'apresentacao') {
-    for (const droppedFile of files) {
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-        fileEntry.file((file: File) => {
-          const fileExtension = file.name.split('.').pop()?.toLowerCase();
-          if (this.allowedExtensions.includes(fileExtension || '')) {
-            if (fileType === 'apresentacao') {
-              this.apresentacao.push(droppedFile); // Adiciona à lista de fotos
-            }
-          } else {
-            console.warn(`Arquivo com extensão .${fileExtension} não permitido.`);
+    const maxFiles = 3;
+
+    if ((fileType === 'apresentacao' && this.apresentacao.length >= maxFiles)) {
+      console.warn('Limite de arquivos atingido.');
+      this.fileLimitExceeded = true; // Ativa a mensagem de limite
+      return;
+    }
+
+  for (const droppedFile of files) {
+    if (droppedFile.fileEntry.isFile) {
+      const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+      fileEntry.file((file: File) => {
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+        if (this.allowedExtensions.includes(fileExtension || '')) {
+          if (fileType === 'apresentacao') {
+            this.apresentacao.push(droppedFile); // Adiciona à lista de fotos
           }
-          this.cdr.detectChanges();
-        });
-      } else {
-        console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
-      }
+        } else {
+          console.warn(`Arquivo com extensão .${fileExtension} não permitido.`);
+        }
+        this.cdr.detectChanges();
+      });
+    } else {
+      console.warn(`O item ${droppedFile.relativePath} é um diretório e não pode ser enviado.`);
     }
   }
 
-    public fileOver(event: any) {
-      console.log('Arquivo sobre a área de drop:', event);
+  this.fileLimitExceeded = false;
+}
+
+  public fileOver(event: any) {
+    console.log('Arquivo sobre a área de drop:', event);
+  }
+
+  public fileLeave(event: any) {
+    console.log('Arquivo saiu da área de drop:', event);
+  }
+
+  public openFileSelector(event: Event, fileType: 'apresentacao'): void {
+    event.preventDefault();
+    const fileInput = this.fileInput ;
+    fileInput.nativeElement.onchange = (e: any) => {
+        this.onFilesSelected(e, fileType);
+    };
+    fileInput.nativeElement.click();
+  }
+
+  public onFilesSelected(event: any, fileType: 'apresentacao'): void {
+    const maxFiles = 3;
+
+    if ((fileType === 'apresentacao' && this.apresentacao.length >= maxFiles)) {
+        this.fileLimitExceeded = true; // Ativa a mensagem de limite
+        return;
     }
 
-    public fileLeave(event: any) {
-      console.log('Arquivo saiu da área de drop:', event);
-    }
-
-    public openFileSelector(event: any): void {
-      event.preventDefault()
-      this.fileInput.nativeElement.click();
-    }
-
-    public onFilesSelected(event: any, fileType: 'apresentacao'): void {
-      const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
+    const files: NgxFileDropEntry[] = Array.from(event.target.files as File[]).map((file: File) => {
         return {
-          fileEntry: {
-            isFile: true,
-            isDirectory: false,
-            name: file.name,
-            file: (callback: (file: File) => void) => callback(file),
-          } as FileSystemFileEntry,
-          relativePath: file.name
+            fileEntry: {
+                isFile: true,
+                isDirectory: false,
+                name: file.name,
+                file: (callback: (file: File) => void) => callback(file),
+            } as FileSystemFileEntry,
+            relativePath: file.name
         };
-      });
+    });
 
-      this.onFileDropped(files, fileType);
+    // Filtra arquivos duplicados
+    const filteredFiles = files.filter(newFile => {
+        const fileName = newFile.relativePath;
+        if (fileType === 'apresentacao') {
+            return !this.apresentacao.some(existingFile => existingFile.relativePath === fileName);
+        }
+        return true;
+    });
+
+    // Adiciona apenas os arquivos filtrados (sem duplicatas)
+    this.onFileDropped(filteredFiles, fileType);
+    this.fileLimitExceeded = false;
+  }
+
+
+  public removeFile(fileName: string, fileType: 'apresentacao'): void {
+    if (fileType === 'apresentacao') {
+      this.apresentacao = this.apresentacao.filter(file => file.relativePath !== fileName); // Remove o arquivo de fotos
     }
+
+    // Se o limite foi excedido anteriormente, reseta a mensagem
+    if (this.fileLimitExceeded && (this.apresentacao.length < 3 )) {
+      this.fileLimitExceeded = false;
+    }
+
+    this.cdr.detectChanges(); // Atualiza a view
+  }
+
 
 
 
@@ -114,17 +164,23 @@ export class ParceriasComponent {
     });
 
 
-    onSubmit(): void {
+    onSubmit(semArquivo: boolean): void {
+
+      if(!semArquivo && this.apresentacao.length === 0) {
+        return;
+      }
+
+      const semArquivoApresentacao = "Nenhum arquivo enviado";
 
       const parceria = {
           ...this.formGroup.value,
-          ...this.parceriasForm.value,
-          ...this.parceriasForm2.value
+          ...this.parceriasForm.value
       };
 
       // Estrutura do objeto que você deseja
       const response = {
           ...parceria,
+          apresentacaoArquivo: semArquivo ? semArquivoApresentacao : null,
           apresentacao: [],
       };
 

@@ -35,7 +35,8 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SoftwareComponent {
-  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInputProblema') fileInputProblema!: ElementRef;
+  @ViewChild('fileInputFotos') fileInputFotos!: ElementRef;
   @ViewChild('stepper') stepperChild!: MatStepper;
   @Input({required: true}) formGroup!: FormGroup;
   @Input({required: true}) stepper!: MatStepper;
@@ -103,13 +104,15 @@ export class SoftwareComponent {
     console.log('Arquivo saiu da área de drop:', event);
   }
 
+
   public openFileSelector(event: Event, fileType: 'fotos' | 'problema'): void {
     event.preventDefault();
-    this.fileInput.nativeElement.onchange = (e: any) => {
+    const fileInput = fileType === 'fotos' ? this.fileInputFotos : this.fileInputProblema;
+    fileInput.nativeElement.onchange = (e: any) => {
         this.onFilesSelected(e, fileType);
     };
-    this.fileInput.nativeElement.click();
-}
+    fileInput.nativeElement.click();
+  }
 
   public onFilesSelected(event: any, fileType: 'fotos' | 'problema'): void {
     const maxFiles = 3;
@@ -196,7 +199,7 @@ export class SoftwareComponent {
   });
 
   softwareForm8 = this._formBuilder.group({
-    comecoProblema: ['a', Validators.required]
+    comecoProblema: ['', Validators.required]
   });
 
   softwareForm9 = this._formBuilder.group({
@@ -209,9 +212,14 @@ export class SoftwareComponent {
   readonly maxDate = new Date();
 
 
-  submit(){
+  submit(isLastStep: boolean): void {
 
-    const software = {
+    const frase = isLastStep ? 'Não encontrei o software do meu produto' : 'Baixei uma versão do software e estou tendo problemas';
+
+    let software;
+
+    if(isLastStep){
+       software = {
         ...this.formGroup.value,
         ...this.softwareForm.value,
         ...this.softwareForm3.value,
@@ -219,11 +227,21 @@ export class SoftwareComponent {
         ...this.softwareForm6.value,
         ...this.softwareForm8.value,
         ...this.softwareForm9.value
-    };
+      };
+    }else{
+         software = {
+          ...this.formGroup.value,
+          ...this.softwareForm.value,
+          ...this.softwareForm3.value,
+          ...this.softwareForm4.value,
+        };
+    }
+
 
     // Estrutura do objeto que você deseja
     const response = {
         ...software,
+        caso: frase,
         fotos: [],
         problema: []
     };

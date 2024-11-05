@@ -74,7 +74,7 @@ export class OutrosComponent {
 
     console.log(outros)
 
-    if (outros.valid) {
+    if (this.formGroup.valid && this.outrosForm.valid) {
       // Se o formulário for válido, envie os dados para o backend
       this.apiService.enviarOutros(outros).subscribe({
         next: (response) => {

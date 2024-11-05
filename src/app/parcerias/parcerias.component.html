@@ -25,7 +25,7 @@
         <h2>Caso tenha, envie um Midiakit ou Apresentação</h2>
       </div>
       <div class="step_container_textarea">
-        <form class="step_container_content__form from_textarea" [formGroup]="parceriasForm2" (submit)="onSubmit()">
+        <form class="step_container_content__form from_textarea" [formGroup]="parceriasForm2">
           <ngx-file-drop
             (onFileDrop)="onFileDropped($event,'apresentacao')"
             (onFileOver)="fileOver($event)"
@@ -36,7 +36,7 @@
             <ng-template ngx-file-drop-content-tmp>
               <div class="file-drop-content step_textarea">
                 <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-                <p>Solte os arquivos para fazer <br/> upload ou <a (click)="openFileSelector($event)">procurar</a></p>
+                <p>Solte os arquivos para fazer <br/> upload ou <a (click)="openFileSelector($event, 'apresentacao')">procurar</a></p>
                 <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
               </div>
             </ng-template>
@@ -45,14 +45,21 @@
           <div *ngIf="apresentacao.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
-              <li *ngFor="let file of apresentacao">{{ file.relativePath }}</li>
+              <li *ngFor="let file of apresentacao" class="file-item">
+                <div class="file-info">
+                  {{ file.relativePath }}
+                </div>
+                <button mat-icon-button class="remove-button" (click)="removeFile(file.relativePath, 'apresentacao')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </li>
             </ul>
           </div>
           <div class="step_container_content__form__button">
             <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
             <div class="step_container_content__form__button__child">
-              <button class="step_container_content__form__button__middle " mat-button matStepperNext>Não tenho</button>
-              <button type="submit" class="step_container_content__form__button__next" mat-button>Enviar</button>
+              <button class="step_container_content__form__button__middle " mat-button matStepperNext (click)="onSubmit(true)">Não tenho</button>
+              <button type="submit" class="step_container_content__form__button__next" mat-button (click)="onSubmit(false)">Enviar</button>
             </div>
           </div>
         </form>

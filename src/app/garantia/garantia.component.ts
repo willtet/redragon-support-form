@@ -34,8 +34,9 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GarantiaComponent {
-  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('stepper') stepperChild!: MatStepper;
+  @ViewChild('fileInputNotaFiscal') fileInputNotaFiscal!: ElementRef;
+  @ViewChild('fileInputFotos') fileInputFotos!: ElementRef;
   @Input({required: true}) formGroup!: FormGroup;
   @Input({required: true}) stepper!: MatStepper;
   public fotos: NgxFileDropEntry[] = [];
@@ -104,11 +105,12 @@ export class GarantiaComponent {
 
   public openFileSelector(event: Event, fileType: 'fotos' | 'notaFiscal'): void {
     event.preventDefault();
-    this.fileInput.nativeElement.onchange = (e: any) => {
+    const fileInput = fileType === 'fotos' ? this.fileInputFotos : this.fileInputNotaFiscal;
+    fileInput.nativeElement.onchange = (e: any) => {
         this.onFilesSelected(e, fileType);
     };
-    this.fileInput.nativeElement.click();
-}
+    fileInput.nativeElement.click();
+  }
 
   public onFilesSelected(event: any, fileType: 'fotos' | 'notaFiscal'): void {
     const maxFiles = 3;
@@ -188,7 +190,7 @@ export class GarantiaComponent {
   });
 
   garantiaForm6 = this._formBuilder.group({
-    mensagem: ['', Validators.required]
+    mensagem: [null, Validators.required]
   });
 
 

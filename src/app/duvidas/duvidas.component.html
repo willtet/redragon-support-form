@@ -8,13 +8,13 @@
         <form class="step_container_content__form"  [formGroup]="duvidaForm">
           <mat-form-field>
             <mat-label>Nome</mat-label>
-            <input type="text" matInput formControlName="nome" placeholder="Nome" required>
-            <mat-error *ngIf="duvidaForm.controls['nome'].hasError('required')">Campo obrigatório</mat-error>
+            <input type="text" matInput formControlName="nomeProduto" placeholder="Nome" required>
+            <mat-error *ngIf="duvidaForm.controls['nomeProduto'].hasError('required')">Campo obrigatório</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Série</mat-label>
-            <input type="text" matInput formControlName="serie" placeholder="Série" required>
-            <mat-error *ngIf="duvidaForm.controls['serie'].hasError('required')">Campo obrigatório</mat-error>
+            <input type="text" matInput formControlName="serieProduto" placeholder="Série" required>
+            <mat-error *ngIf="duvidaForm.controls['serieProduto'].hasError('required')">Campo obrigatório</mat-error>
           </mat-form-field>
           <div class="step_container_content__form__button">
             <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>

@@ -17,13 +17,11 @@ export class ApiService {
   }
 
   enviarSoftware(dados: any): Observable<any> {
-    this.apiUrl.concat("/software")
-    return this.http.post<any>(this.apiUrl, dados);
+    return this.http.post<any>(this.apiUrl.concat("/software"), dados);
   }
 
   enviarDuvida(dados: any): Observable<any> {
-    this.apiUrl.concat("/duvida")
-    return this.http.post<any>(this.apiUrl, dados);
+    return this.http.post<any>(this.apiUrl.concat("/duvida"), dados);
   }
 
   enviarParceria(dados: any): Observable<any> {

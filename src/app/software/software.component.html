@@ -47,7 +47,7 @@
               </div>
             </ng-template>
           </ngx-file-drop>
-          <input type="file" #fileInput multiple (change)="onFilesSelected($event,'fotos')" style="display: none;" />
+          <input type="file" #fileInputFotos multiple (change)="onFilesSelected($event,'fotos')" style="display: none;" />
           <div *ngIf="fotos.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
@@ -113,7 +113,7 @@
     <div class="step_container_options">
       <h1>Selecione a opção abaixo</h1>
         <div class="step_container_options__buttons">
-          <button mat-button (click)="submit()">Não encontrei o software do meu produto</button>
+          <button mat-button (click)="submit(false)">Não encontrei o software do meu produto</button>
           <button mat-button matStepperNext>Baixei uma versão do software e estou tendo problemas</button>
         </div>
       <div class="step_container_options__back">
@@ -165,7 +165,7 @@
                 </div>
               </ng-template>
             </ngx-file-drop>
-            <input type="file" #fileInput multiple (change)="onFilesSelected($event,'problema')" style="display: none;" />
+            <input type="file" #fileInputProblema multiple (change)="onFilesSelected($event,'problema')" style="display: none;" />
             <div *ngIf="problema.length > 0">
               <h3>Arquivos aceitos:</h3>
               <ul>
@@ -222,7 +222,7 @@
             </mat-form-field>
             <div class="step_container_content__form__button">
               <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
-              <button class="step_container_content__form__button__next" mat-button (click)="submit()" >Enviar</button>
+              <button class="step_container_content__form__button__next" mat-button (click)="submit(true)" >Enviar</button>
             </div>
           </form>
         </div>

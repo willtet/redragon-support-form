@@ -84,12 +84,12 @@
             <ng-template ngx-file-drop-content-tmp>
               <div class="file-drop-content step_textarea">
                 <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-                <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event, 'fotos')">procurar</a></p>
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="javascript:void(0);" (click)="openFileSelector($event, 'fotos')">procurar</a></p>
                 <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
               </div>
             </ng-template>
           </ngx-file-drop>
-          <input type="file" #fileInput multiple (change)="onFilesSelected($event,'fotos')" style="display: none;" />
+          <input type="file" #fileInputFotos multiple (change)="onFilesSelected($event,'fotos')" style="display: none;" />
           <div *ngIf="fotos.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>
@@ -132,12 +132,12 @@
             <ng-template ngx-file-drop-content-tmp>
               <div class="file-drop-content step_textarea">
                 <img src="../../assets/page_assets/cloud_upload.svg" alt="">
-                <p>Solte os arquivos para fazer <br/> upload ou <a href="" (click)="openFileSelector($event, 'notaFiscal')">procurar</a></p>
+                <p>Solte os arquivos para fazer <br/> upload ou <a href="javascript:void(0);" (click)="openFileSelector($event, 'notaFiscal')">procurar</a></p>
                 <p class="step_textarea__files_accept">Arquivos Suportados: .JPG, .PNG e .PDF</p>
               </div>
             </ng-template>
           </ngx-file-drop>
-          <input type="file" #fileInput multiple (change)="onFilesSelected($event,'notaFiscal')" style="display: none;" />
+          <input type="file" #fileInputNotaFiscal multiple (change)="onFilesSelected($event,'notaFiscal')" style="display: none;" />
           <div *ngIf="notaFiscal.length > 0">
             <h3>Arquivos aceitos:</h3>
             <ul>

@@ -10,6 +10,7 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from "../enviado/enviado.component";
+import { ApiService } from '../api-service.service';
 
 @Component({
   selector: 'app-duvidas',
@@ -53,8 +54,8 @@ export class DuvidasComponent {
 
 
   duvidaForm = this._formBuilder.group({
-    nome: ['a', Validators.required],
-    serie: ['a', Validators.required],
+    nomeProduto: ['a', Validators.required],
+    serieProduto: ['a', Validators.required],
   });
 
   duvidaForm2 = this._formBuilder.group({
@@ -62,7 +63,7 @@ export class DuvidasComponent {
   });
 
   duvidaForm3 = this._formBuilder.group({
-    dataCompra: ['a', Validators.required]
+    dataCompra: ['', Validators.required]
   });
 
   duvidaForm4 = this._formBuilder.group({
@@ -90,6 +91,19 @@ export class DuvidasComponent {
     };
 
     console.log(response);
+
+    if (this.formGroup.valid && this.duvidaForm.valid && this.duvidaForm2.valid && this.duvidaForm3.valid && this.duvidaForm4.valid) {
+      // Se o formulário for válido, envie os dados para o backend
+      this.apiService.enviarDuvida(response).subscribe({
+          next: (response) => {
+              // Manipular resposta do backend
+          },
+          error: (err) => {
+              console.error('Erro ao enviar dados:', err);
+          }
+      });
+    }
+
     this.selectedForm = 'enviado';
     this.cdr.detectChanges();
     this.stepperChild.next();
@@ -97,6 +111,7 @@ export class DuvidasComponent {
 
 
   constructor(private _formBuilder: FormBuilder,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService) {}
 
 }
