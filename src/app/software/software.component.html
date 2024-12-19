@@ -113,11 +113,19 @@
     <div class="step_container_options">
       <h1>Selecione a opção abaixo</h1>
         <div class="step_container_options__buttons">
-          <button mat-button (click)="submit(false)">Não encontrei o software do meu produto</button>
-          <button mat-button matStepperNext>Baixei uma versão do software e estou tendo problemas</button>
+          <button
+            *ngIf="!isLoading"
+              type="submit"
+              mat-button
+              (click)="submit(false)"
+          >Não encontrei o software do meu produto</button>
+          <button *ngIf="isLoading"  mat-button disabled>
+            <mat-spinner diameter="20" class="spinner "></mat-spinner>
+          </button>
+          <button mat-button matStepperNext [disabled]="isLoading">Baixei uma versão do software e estou tendo problemas</button>
         </div>
       <div class="step_container_options__back">
-          <button mat-button matStepperPrevious>Voltar</button>
+          <button mat-button [disabled]="isLoading" matStepperPrevious>Voltar</button>
       </div>
     </div>
   </mat-step>
@@ -221,8 +229,19 @@
               <mat-error *ngIf="softwareForm9.controls['mudancaOS'].hasError('required')"> Campo obrigatório</mat-error>
             </mat-form-field>
             <div class="step_container_content__form__button">
-              <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
-              <button class="step_container_content__form__button__next" mat-button (click)="submit(true)" >Enviar</button>
+              <button class="step_container_content__form__button__back" [disabled]="isLoading" mat-button matStepperPrevious>Voltar</button>
+              <button
+              *ngIf="!isLoading"
+              type="submit"
+              class="step_container_content__form__button__next"
+              mat-button
+              (click)="submit(true)"
+            >
+              Enviar
+            </button>
+            <button *ngIf="isLoading" class="step_container_content__form__button__next" mat-raised-button disabled>
+              <mat-spinner diameter="20" class="spinner "></mat-spinner>
+            </button>
             </div>
           </form>
         </div>
@@ -232,5 +251,8 @@
   </div>
   <mat-step *ngIf="selectedForm === 'enviado'">
     <app-enviado></app-enviado>
+  </mat-step>
+  <mat-step *ngIf="selectedForm === 'erro'">
+    <app-error></app-error>
   </mat-step>
 </mat-horizontal-stepper>

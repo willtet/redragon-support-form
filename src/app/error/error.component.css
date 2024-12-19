@@ -1,0 +1,19 @@
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8d7da;
+}
+mat-card {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  background-color: #fff;
+}
+mat-card-title {
+  color: #721c24;
+}
+p {
+  color: #6c757d;
+}

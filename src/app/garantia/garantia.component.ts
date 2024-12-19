@@ -12,6 +12,8 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from "../enviado/enviado.component";
 import { ApiService } from '../api-service.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ErrorComponent } from "../error/error.component";
 
 @Component({
   selector: 'app-garantia',
@@ -27,8 +29,8 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     NgxFileDropModule,
     EnviadoComponent,
-    MatIconModule
-  ],
+    MatIconModule,
+    MatProgressSpinnerModule, ErrorComponent],
   templateUrl: './garantia.component.html',
   styleUrl: './garantia.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,6 +44,7 @@ export class GarantiaComponent {
   public fotos: NgxFileDropEntry[] = [];
   public notaFiscal: NgxFileDropEntry[] = [];
   public fileLimitExceeded: boolean = false;
+  public isLoading: boolean = false;
 
   public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
   public selectedForm: string | null = null;
@@ -169,12 +172,12 @@ export class GarantiaComponent {
 
 
   garantiaForm = this._formBuilder.group({
-    nomeProduto: ['garantiaNomeProduto', Validators.required],
-    serieProduto: ['garantiaSerieProduto', Validators.required],
+    nomeProduto: ['', Validators.required],
+    serieProduto: ['', Validators.required],
   });
 
   public garantiaForm2 = this._formBuilder.group({
-    descricao: ['descricao', Validators.required]
+    descricao: ['', Validators.required]
   });
 
   garantiaForm3 = this._formBuilder.group({
@@ -202,6 +205,7 @@ export class GarantiaComponent {
 
   submit() {
 
+    this.isLoading = true;
 
 
     const garantia = {
@@ -279,10 +283,18 @@ export class GarantiaComponent {
           this.apiService.enviarGarantia(response).subscribe({
               next: (response) => {
                   // Manipular resposta do backend
+                  this.selectedForm = 'enviado';
+                  this.cdr.detectChanges();
+                  this.stepperChild.next();
               },
               error: (err) => {
-                  console.error('Erro ao enviar dados:', err);
-              }
+                this.selectedForm = 'erro';
+                this.cdr.detectChanges();
+                this.stepperChild.next();
+              },
+              complete: () => {
+                this.isLoading = false; // Finaliza o carregamento
+              },
           });
       } else {
           console.error('Formulário inválido');
@@ -291,9 +303,7 @@ export class GarantiaComponent {
     });
 
 
-    this.selectedForm = 'enviado';
-    this.cdr.detectChanges();
-    this.stepperChild.next();
+
   }
 
   constructor(

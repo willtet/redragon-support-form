@@ -11,6 +11,8 @@ import { EnviadoComponent } from '../enviado/enviado.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../api-service.service';
+import { ErrorComponent } from '../error/error.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-outros',
@@ -26,7 +28,9 @@ import { ApiService } from '../api-service.service';
     MatDatepickerModule,
     CommonModule,
     NgxFileDropModule,
-    EnviadoComponent
+    EnviadoComponent,
+    MatProgressSpinnerModule,
+    ErrorComponent
 
   ],
   templateUrl: './outros.component.html',
@@ -39,6 +43,9 @@ export class OutrosComponent {
   @Input({required: true}) formGroup!: FormGroup;
   @Input({required: true}) stepper!: MatStepper;
   private httpClient = inject(HttpClient);
+  public fileLimitExceeded: boolean = false;
+  public isLoading: boolean = false;
+  public selectedForm: string | null = null;
 
 
 
@@ -67,6 +74,9 @@ export class OutrosComponent {
 
   onSubmit(): void {
 
+
+    this.isLoading = true;
+
     const outros = {
       ...this.formGroup.value,
       ...this.outrosForm.value
@@ -78,17 +88,24 @@ export class OutrosComponent {
       // Se o formulário for válido, envie os dados para o backend
       this.apiService.enviarOutros(outros).subscribe({
         next: (response) => {
-
+          // Manipular resposta do backend
+          this.selectedForm = 'enviado';
+          this.cdr.detectChanges();
+          this.stepperChild.next();
         },
         error: (err) => {
-          console.error('Erro ao enviar dados:', err);
-        }
+          this.selectedForm = 'erro';
+          this.cdr.detectChanges();
+          this.stepperChild.next();
+        },
+        complete: () => {
+          this.isLoading = false; // Finaliza o carregamento
+        },
       });
     } else {
       console.error('Formulário inválido');
     }
 
-    this.stepperChild.next();
   }
 
 

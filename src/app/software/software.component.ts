@@ -12,6 +12,8 @@ import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from '../enviado/enviado.component';
 import { ApiService } from '../api-service.service';
 import { MatIconModule } from '@angular/material/icon';
+import { ErrorComponent } from "../error/error.component";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-software',
@@ -28,8 +30,10 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     NgxFileDropModule,
     EnviadoComponent,
-    MatIconModule
-  ],
+    MatIconModule,
+    ErrorComponent,
+    MatProgressSpinnerModule
+],
   templateUrl: './software.component.html',
   styleUrl: './software.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,6 +47,7 @@ export class SoftwareComponent {
   public fotos: NgxFileDropEntry[] = [];
   public problema: NgxFileDropEntry[] = [];
   public fileLimitExceeded: boolean = false;
+  public isLoading: boolean = false;
 
   public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
   public selectedForm: string | null = null;
@@ -171,8 +176,8 @@ export class SoftwareComponent {
 
 
   softwareForm = this._formBuilder.group({
-    nomeProduto: ['a', Validators.required],
-    serieProduto: ['a', Validators.required],
+    nomeProduto: ['', Validators.required],
+    serieProduto: ['', Validators.required],
   });
 
   softwareForm2 = this._formBuilder.group({
@@ -215,6 +220,7 @@ export class SoftwareComponent {
   submit(isLastStep: boolean): void {
 
     const frase = isLastStep ? 'Não encontrei o software do meu produto' : 'Baixei uma versão do software e estou tendo problemas';
+    this.isLoading = true;
 
     let software;
 
@@ -304,23 +310,26 @@ export class SoftwareComponent {
         if (this.formGroup.valid) {  // Checa a validade do formGroup
           // Se o formulário for válido, envie os dados para o backend
           this.apiService.enviarSoftware(response).subscribe({
-              next: (response) => {
-                  // Manipular resposta do backend
-              },
-              error: (err) => {
-                  console.error('Erro ao enviar dados:', err);
-              }
+            next: (response) => {
+              // Manipular resposta do backend
+              this.selectedForm = 'enviado';
+              this.cdr.detectChanges();
+              this.stepperChild.next();
+          },
+          error: (err) => {
+            this.selectedForm = 'erro';
+            this.cdr.detectChanges();
+            this.stepperChild.next();
+          },
+          complete: () => {
+            this.isLoading = false; // Finaliza o carregamento
+          },
           });
       } else {
           console.error('Formulário inválido');
       }
 
     });
-
-
-    this.selectedForm = 'enviado';
-    this.cdr.detectChanges();
-    this.stepperChild.next();
   }
 
 

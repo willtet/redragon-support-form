@@ -11,6 +11,7 @@ import { EnviadoComponent } from '../enviado/enviado.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ApiService } from '../api-service.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-parcerias',
@@ -27,8 +28,8 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     NgxFileDropModule,
     EnviadoComponent,
-    MatIconModule
-
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './parcerias.component.html',
   styleUrl: './parcerias.component.css',
@@ -41,6 +42,8 @@ export class ParceriasComponent {
   @Input({required: true}) stepper!: MatStepper;
   public apresentacao: NgxFileDropEntry[] = [];
   public fileLimitExceeded: boolean = false;
+  public isLoadingEnviar: boolean = false;
+  public isLoadingSemImagem: boolean = false;
 
   public allowedExtensions: string[] = ['jpg', 'jpeg', 'png', 'pdf'];
   public selectedForm: string | null = null;
@@ -166,6 +169,13 @@ export class ParceriasComponent {
 
     onSubmit(semArquivo: boolean): void {
 
+      if(!semArquivo) {
+        this.isLoadingEnviar = true;
+      }else{
+        this.isLoadingSemImagem = true
+      }
+
+
       if(!semArquivo && this.apresentacao.length === 0) {
         return;
       }
@@ -236,12 +246,21 @@ export class ParceriasComponent {
           if (this.formGroup.valid) {  // Checa a validade do formGroup
               // Se o formulário for válido, envie os dados para o backend
               this.apiService.enviarParceria(response).subscribe({
-                  next: (response) => {
-                      // Manipular resposta do backend
-                  },
-                  error: (err) => {
-                      console.error('Erro ao enviar dados:', err);
-                  }
+                next: (response) => {
+                  // Manipular resposta do backend
+                  this.selectedForm = 'enviado';
+                  this.cdr.detectChanges();
+                  this.stepperChild.next();
+              },
+              error: (err) => {
+                this.selectedForm = 'erro';
+                this.cdr.detectChanges();
+                this.stepperChild.next();
+              },
+              complete: () => {
+                this.isLoadingEnviar = false; // Finaliza o carregamento
+                this.isLoadingSemImagem = false;
+              },
               });
           } else {
               console.error('Formulário inválido');
@@ -249,10 +268,6 @@ export class ParceriasComponent {
       }).catch(error => {
           console.error('Erro ao processar arquivos:', error);
       });
-
-      this.selectedForm = 'enviado';
-      this.cdr.detectChanges();
-      this.stepperChild.next();
   }
 
 

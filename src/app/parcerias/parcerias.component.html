@@ -56,10 +56,29 @@
             </ul>
           </div>
           <div class="step_container_content__form__button">
-            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__back" [disabled]="isLoadingEnviar || isLoadingSemImagem" mat-button matStepperPrevious>Voltar</button>
             <div class="step_container_content__form__button__child">
-              <button class="step_container_content__form__button__middle " mat-button matStepperNext (click)="onSubmit(true)">Não tenho</button>
-              <button type="submit" class="step_container_content__form__button__next" mat-button (click)="onSubmit(false)">Enviar</button>
+              <button
+                *ngIf="!isLoadingSemImagem"
+                class="step_container_content__form__button__middle "
+                mat-button matStepperNext
+                (click)="onSubmit(true)"
+                [disabled]="isLoadingEnviar || isLoadingSemImagem"
+              >Não tenho</button>
+              <button *ngIf="isLoadingSemImagem" class="step_container_content__form__button__middle" mat-raised-button disabled>
+                <mat-spinner diameter="20" class="spinner "></mat-spinner>
+              </button>
+              <button
+                  *ngIf="!isLoadingEnviar"
+                  type="submit"
+                  class="step_container_content__form__button__next"
+                  mat-button
+                  (click)="onSubmit(false)"
+                  [disabled]="isLoadingEnviar || isLoadingSemImagem"
+              >Enviar</button>
+              <button *ngIf="isLoadingEnviar" class="step_container_content__form__button__next" mat-raised-button disabled>
+                <mat-spinner diameter="20" class="spinner "></mat-spinner>
+              </button>
             </div>
           </div>
         </form>

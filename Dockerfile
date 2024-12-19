@@ -1,33 +1,30 @@
 # Use uma imagem Node adequada para construir a aplicação
 FROM node:20-alpine AS build
 
-# Defina o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
-# Copie o package.json e o package-lock.json para instalar as dependências
 COPY package*.json ./
 
-# Instale as dependências da aplicação
 RUN npm install
 
-# Copie o restante dos arquivos do projeto para o contêiner
 COPY . .
+RUN npm run build --prod
 
-# Compile a aplicação Angular para produção
-RUN npm run build -- --output-path=dist
-
-# Use uma imagem nginx para servir a aplicação Angular
+# Etapa 2: Servir com Nginx
 FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
 
-# Copie a aplicação compilada para o diretório padrão do NGINX
-COPY --from=build /app/dist/browser /usr/share/nginx/html
+# Remove arquivos padrão do Nginx
+RUN rm -rf ./*
 
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copia os arquivos do build Angular para o Nginx
+COPY --from=build /app/dist/dist/formulario-suporte-redragon/browser .
 
-COPY mime.types /etc/nginx/mime.types
+# Copia o arquivo de configuração do Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Exponha a porta 80 para servir a aplicação
-EXPOSE 80
+# Expõe a porta 4200
+EXPOSE 4200
 
-# Inicie o NGINX
+# Comando para iniciar o Nginx
 CMD ["nginx", "-g", "daemon off;"]

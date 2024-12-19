@@ -11,6 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { EnviadoComponent } from "../enviado/enviado.component";
 import { ApiService } from '../api-service.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ErrorComponent } from '../error/error.component';
 
 @Component({
   selector: 'app-duvidas',
@@ -26,7 +28,9 @@ import { ApiService } from '../api-service.service';
     MatDatepickerModule,
     CommonModule,
     NgxFileDropModule,
-    EnviadoComponent
+    EnviadoComponent,
+    MatProgressSpinnerModule,
+    ErrorComponent
 ],
   templateUrl: './duvidas.component.html',
   styleUrl: './duvidas.component.css'
@@ -38,6 +42,7 @@ export class DuvidasComponent {
   @Input({required: true}) stepper!: MatStepper;
 
   public selectedForm: string | null = null;
+  public isLoading: boolean = false;
 
 
   goBack(): void {
@@ -54,12 +59,12 @@ export class DuvidasComponent {
 
 
   duvidaForm = this._formBuilder.group({
-    nomeProduto: ['a', Validators.required],
-    serieProduto: ['a', Validators.required],
+    nomeProduto: ['', Validators.required],
+    serieProduto: ['', Validators.required],
   });
 
   duvidaForm2 = this._formBuilder.group({
-    problemaDetalhado: ['a', Validators.required]
+    problemaDetalhado: ['', Validators.required]
   });
 
   duvidaForm3 = this._formBuilder.group({
@@ -67,7 +72,7 @@ export class DuvidasComponent {
   });
 
   duvidaForm4 = this._formBuilder.group({
-    problemaResumo: ['a', Validators.required]
+    problemaResumo: ['', Validators.required]
   });
 
 
@@ -78,6 +83,8 @@ export class DuvidasComponent {
 
 
   submit() {
+    this.isLoading = true;
+
     const duvidas = {
       ...this.formGroup.value,
       ...this.duvidaForm.value,
@@ -95,18 +102,22 @@ export class DuvidasComponent {
     if (this.formGroup.valid && this.duvidaForm.valid && this.duvidaForm2.valid && this.duvidaForm3.valid && this.duvidaForm4.valid) {
       // Se o formulário for válido, envie os dados para o backend
       this.apiService.enviarDuvida(response).subscribe({
-          next: (response) => {
-              // Manipular resposta do backend
-          },
-          error: (err) => {
-              console.error('Erro ao enviar dados:', err);
-          }
+        next: (response) => {
+          // Manipular resposta do backend
+          this.selectedForm = 'enviado';
+          this.cdr.detectChanges();
+          this.stepperChild.next();
+        },
+        error: (err) => {
+          this.selectedForm = 'erro';
+          this.cdr.detectChanges();
+          this.stepperChild.next();
+        },
+        complete: () => {
+          this.isLoading = false; // Finaliza o carregamento
+        },
       });
     }
-
-    this.selectedForm = 'enviado';
-    this.cdr.detectChanges();
-    this.stepperChild.next();
   }
 
 

@@ -12,14 +12,26 @@
             <mat-error *ngIf="outrosForm.controls['duvida'].hasError('required')"> Campo obrigatório</mat-error>
           </mat-form-field>
           <div class="step_container_content__form__button">
-            <button class="step_container_content__form__button__back" mat-button (click)="goBack()">Voltar</button>
-            <button class="step_container_content__form__button__next" mat-button >Enviar</button>
+            <button class="step_container_content__form__button__back" [disabled]="isLoading" mat-button (click)="goBack()">Voltar</button>
+            <button
+                *ngIf="!isLoading"
+                type="submit"
+                class="step_container_content__form__button__next"
+                mat-button
+                (click)="submit()"
+            >Enviar</button>
+            <button *ngIf="isLoading" class="step_container_content__form__button__next" mat-button disabled>
+              <mat-spinner diameter="20" class="spinner "></mat-spinner>
+            </button>
           </div>
         </form>
       </div>
     </div>
   </mat-step>
-  <mat-step>
+  <mat-step *ngIf="selectedForm === 'enviado'">
     <app-enviado></app-enviado>
+  </mat-step>
+  <mat-step *ngIf="selectedForm === 'erro'">
+    <app-error></app-error>
   </mat-step>
 </mat-horizontal-stepper>

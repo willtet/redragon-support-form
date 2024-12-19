@@ -155,17 +155,29 @@
             <p>Você atingiu o limite máximo de 3 arquivos de nota fiscal.</p>
           </div>
           <div class="step_container_content__form__button">
-            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
+            <button class="step_container_content__form__button__back" [disabled]="isLoading" mat-button matStepperPrevious>Voltar</button>
             <div class="step_container_content__form__button__child">
-              <button class="step_container_content__form__button__middle " mat-button matStepperNext>Não tenho Nota Fiscal</button>
-              <button type="submit" class="step_container_content__form__button__next" mat-button (click)="submit()">Enviar</button>
+              <button class="step_container_content__form__button__middle " [disabled]="isLoading" mat-button matStepperNext>Não tenho Nota Fiscal</button>
+              <button
+                *ngIf="!isLoading"
+                type="submit"
+                class="step_container_content__form__button__next"
+                mat-button
+                (click)="submit()"
+              >
+                Enviar
+              </button>
+
+              <button *ngIf="isLoading" class="step_container_content__form__button__next" mat-raised-button disabled>
+                <mat-spinner diameter="20" class="spinner "></mat-spinner>
+              </button>
             </div>
           </div>
         </form>
       </div>
     </div>
   </mat-step>
-  <mat-step [stepControl]="garantiaForm6" *ngIf="selectedForm != 'enviado'">
+  <mat-step [stepControl]="garantiaForm6" *ngIf="selectedForm != 'enviado' && selectedForm != 'erro'">
     <div class="step_container">
       <div class="step_container_label">
         <h2>Por que sua Nota Fiscal não está disponível?</h2>
@@ -178,8 +190,20 @@
             <mat-error *ngIf="garantiaForm6.controls['mensagem'].hasError('required')"> Campo obrigatório</mat-error>
           </mat-form-field>
           <div class="step_container_content__form__button">
-            <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
-            <button class="step_container_content__form__button__next" mat-button (click)="submit()">Enviar</button>
+            <button class="step_container_content__form__button__back" [disabled]="isLoading" mat-button matStepperPrevious>Voltar</button>
+            <button
+              *ngIf="!isLoading"
+              type="submit"
+              class="step_container_content__form__button__next"
+              mat-button
+              (click)="submit()"
+            >
+              Enviar
+            </button>
+
+            <button *ngIf="isLoading" class="step_container_content__form__button__next" mat-raised-button disabled>
+              <mat-spinner diameter="20" class="spinner "></mat-spinner>
+            </button>
           </div>
         </form>
       </div>
@@ -188,5 +212,8 @@
   </mat-step>
   <mat-step *ngIf="selectedForm === 'enviado'">
     <app-enviado></app-enviado>
+  </mat-step>
+  <mat-step *ngIf="selectedForm === 'erro'">
+    <app-error></app-error>
   </mat-step>
 </mat-horizontal-stepper>

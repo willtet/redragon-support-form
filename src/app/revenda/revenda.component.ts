@@ -9,6 +9,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ApiService } from '../api-service.service';
+import { ErrorComponent } from "../error/error.component";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-revenda',
@@ -23,8 +25,10 @@ import { ApiService } from '../api-service.service';
     MatDatepickerModule,
     CommonModule,
     NgxFileDropModule,
-    EnviadoComponent
-  ],
+    EnviadoComponent,
+    ErrorComponent,
+    MatProgressSpinnerModule
+],
   templateUrl: './revenda.component.html',
   styleUrl: './revenda.component.css'
 })
@@ -33,17 +37,19 @@ export class RevendaComponent {
   @ViewChild('stepper') stepperChild!: MatStepper;
   @Input({required: true}) formGroup!: FormGroup;
   @Input({required: true}) stepper!: MatStepper;
+  public isLoading: boolean = false;
+  public selectedForm: string | null = null;
 
 
   revendaForm = this._formBuilder.group({
-    nomeLoja: ['a', Validators.required],
-    cnpj: ['a', Validators.required],
-    site: ['a'],
-    whatsapp: ['a'],
-    cidade: ['a', Validators.required],
-    inscricaoEstadual: ['a', Validators.required],
-    mensagemMarca: ['a', Validators.required],
-    observacao: ['a', Validators.required]
+    nomeLoja: ['', Validators.required],
+    cnpj: ['', Validators.required],
+    site: [''],
+    whatsapp: [''],
+    cidade: ['', Validators.required],
+    inscricaoEstadual: ['', Validators.required],
+    mensagemMarca: ['', Validators.required],
+    observacao: ['', Validators.required]
   });
 
   goBack(): void {
@@ -67,6 +73,8 @@ export class RevendaComponent {
 
   onSubmit(): void {
 
+    this.isLoading = true;
+
     const revenda = {
       ...this.formGroup.value,
       ...this.revendaForm.value
@@ -78,17 +86,24 @@ export class RevendaComponent {
       // Se o formulário for válido, envie os dados para o backend
       this.apiService.enviarRevenda(revenda).subscribe({
         next: (response) => {
-
-        },
-        error: (err) => {
-          console.error('Erro ao enviar dados:', err);
-        }
+          // Manipular resposta do backend
+          this.selectedForm = 'enviado';
+          this.cdr.detectChanges();
+          this.stepperChild.next();
+      },
+      error: (err) => {
+        this.selectedForm = 'erro';
+        this.cdr.detectChanges();
+        this.stepperChild.next();
+      },
+      complete: () => {
+        this.isLoading = false; // Finaliza o carregamento
+      },
       });
     } else {
       console.error('Formulário inválido');
     }
 
-    this.stepperChild.next();
   }
 
 
