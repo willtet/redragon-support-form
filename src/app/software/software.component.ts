@@ -14,6 +14,7 @@ import { ApiService } from '../api-service.service';
 import { MatIconModule } from '@angular/material/icon';
 import { ErrorComponent } from "../error/error.component";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-software',
@@ -32,7 +33,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     EnviadoComponent,
     MatIconModule,
     ErrorComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltipModule
 ],
   templateUrl: './software.component.html',
   styleUrl: './software.component.css',

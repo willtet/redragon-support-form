@@ -14,6 +14,7 @@ import { ApiService } from '../api-service.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorComponent } from "../error/error.component";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-garantia',
@@ -30,7 +31,9 @@ import { ErrorComponent } from "../error/error.component";
     NgxFileDropModule,
     EnviadoComponent,
     MatIconModule,
-    MatProgressSpinnerModule, ErrorComponent],
+    MatProgressSpinnerModule,
+    ErrorComponent,
+    MatTooltipModule],
   templateUrl: './garantia.component.html',
   styleUrl: './garantia.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

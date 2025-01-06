@@ -13,6 +13,8 @@ import { EnviadoComponent } from "../enviado/enviado.component";
 import { ApiService } from '../api-service.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorComponent } from '../error/error.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-duvidas',
@@ -30,7 +32,9 @@ import { ErrorComponent } from '../error/error.component';
     NgxFileDropModule,
     EnviadoComponent,
     MatProgressSpinnerModule,
-    ErrorComponent
+    ErrorComponent,
+    MatIconModule,
+    MatTooltipModule
 ],
   templateUrl: './duvidas.component.html',
   styleUrl: './duvidas.component.css'

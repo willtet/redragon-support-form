@@ -7,13 +7,24 @@
       <div class="step_container_content">
         <form class="step_container_content__form"  [formGroup]="softwareForm">
           <mat-form-field>
-            <mat-label>Nome</mat-label>
-            <input type="text" matInput formControlName="nomeProduto" placeholder="Nome" required>
+            <mat-label>Modelo do produto</mat-label>
+            <input type="text" matInput formControlName="nomeProduto" placeholder="Modelo do produto" required>
             <mat-error *ngIf="softwareForm.controls['nomeProduto'].hasError('required')">Campo obrigatório</mat-error>
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Série</mat-label>
-            <input type="text" matInput formControlName="serieProduto" placeholder="Série" required>
+            <mat-label>
+              Número de Série
+              <span
+                matTooltip="Para localizar o modelo e o número de série do produto, verifique a etiqueta na parte inferior do dispositivo, no cabo de alimentação ou na embalagem original. Certifique-se de manter essas informações acessíveis para suporte técnico ou garantia."
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                matTooltipHideDelay="200"
+                style="margin-left: 2px; cursor: pointer; vertical-align: middle;"
+              >
+                <mat-icon color="primary" aria-label="Informação">help_outline</mat-icon>
+              </span>
+            </mat-label>
+            <input type="text" matInput formControlName="serieProduto" placeholder="Número de Série" required>
             <mat-error *ngIf="softwareForm.controls['serieProduto'].hasError('required')">Campo obrigatório</mat-error>
           </mat-form-field>
           <div class="step_container_content__form__button">
