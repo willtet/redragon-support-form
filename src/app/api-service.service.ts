@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  private apiUrl = 'http://localhost:8080/email';  // URL do seu backend
+  private apiUrl = 'http://177.153.59.127:8080/email';  // URL do seu backend
 
   constructor(private http: HttpClient) { }
 
