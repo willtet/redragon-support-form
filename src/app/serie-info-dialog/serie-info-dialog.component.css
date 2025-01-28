@@ -1,0 +1,12 @@
+.questionario{
+  display: flex;
+  flex-direction: column;
+}
+
+.questionario p{
+  text-align: center;
+}
+
+.questionario__tipos{
+  display: flex;
+}

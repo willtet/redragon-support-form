@@ -15,6 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorComponent } from "../error/error.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { SerieInfoDialogComponent } from '../serie-info-dialog/serie-info-dialog.component';
 
 @Component({
   selector: 'app-garantia',
@@ -66,6 +68,12 @@ export class GarantiaComponent {
 
 
     this.stepper.previous();
+  }
+
+  openInfoDialog(): void {
+    this.dialog.open(SerieInfoDialogComponent, {
+      width: '700px',
+    });
   }
 
   public onFileDropped(files: NgxFileDropEntry[], fileType: 'fotos' | 'notaFiscal') {
@@ -312,5 +320,6 @@ export class GarantiaComponent {
   constructor(
     private _formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private apiService: ApiService) {}
+    private apiService: ApiService,
+    private dialog: MatDialog) {}
 }
