@@ -1,3 +1,47 @@
+@media (min-width: 1024px) {
+  .container {
+    padding: 40px;
+  }
+
+  .header {
+    font-size: 2.5rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+/* Estilos para tablets (médio porte) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    padding: 30px;
+  }
+
+  .header {
+    font-size: 2rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+}
+
+/* Estilos para dispositivos móveis (telas pequenas) */
+@media (max-width: 767px) {
+  .enter{
+    width: auto !important;
+  }
+
+  h1{
+    font-size: 2rem !important;
+  }
+}
+
 .enter{
   width: 50rem;
   margin: auto;
