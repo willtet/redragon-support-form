@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorComponent } from '../error/error.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-duvidas',
@@ -124,9 +125,14 @@ export class DuvidasComponent {
     }
   }
 
+  openInfoDialog(){
+    this.sharedService.openInfoDialog();
+  }
+
 
   constructor(private _formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private apiService: ApiService) {}
+    private apiService: ApiService,
+    private sharedService: SharedService) {}
 
 }

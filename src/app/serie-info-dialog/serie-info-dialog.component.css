@@ -1,12 +1,35 @@
 .questionario{
   display: flex;
   flex-direction: column;
+  padding: 5%;
 }
 
 .questionario p{
+  font-size: 1.2rem;
   text-align: center;
+}
+
+.questionario__tipos__campo{
+  text-align: center;
+}
+
+.questionario__tipos__campo h2{
+  text-align: center;
+
 }
 
 .questionario__tipos{
   display: flex;
+}
+
+.questionario__img_serie{
+  margin: auto;
+  width: 75%;
+  height: 75%;
+}
+
+.questionario__img_campo{
+  margin: auto;
+  width: 75%;
+  height: 75%;
 }

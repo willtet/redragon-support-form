@@ -17,6 +17,7 @@ import { ErrorComponent } from "../error/error.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { SerieInfoDialogComponent } from '../serie-info-dialog/serie-info-dialog.component';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-garantia',
@@ -70,10 +71,9 @@ export class GarantiaComponent {
     this.stepper.previous();
   }
 
-  openInfoDialog(): void {
-    this.dialog.open(SerieInfoDialogComponent, {
-      width: '700px',
-    });
+
+  openInfoDialog(){
+    this.sharedService.openInfoDialog();
   }
 
   public onFileDropped(files: NgxFileDropEntry[], fileType: 'fotos' | 'notaFiscal') {
@@ -321,5 +321,6 @@ export class GarantiaComponent {
     private _formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef,
     private apiService: ApiService,
-    private dialog: MatDialog) {}
+    private dialog: MatDialog,
+    private sharedService: SharedService) {}
 }

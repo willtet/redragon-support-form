@@ -12,6 +12,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { ApiService } from '../api-service.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-parcerias',
@@ -270,9 +271,14 @@ export class ParceriasComponent {
       });
   }
 
+  openInfoDialog(){
+    this.sharedService.openInfoDialog();
+  }
+
 
     constructor(
       private _formBuilder: FormBuilder,
       private cdr: ChangeDetectorRef,
-      private apiService: ApiService) {}
+      private apiService: ApiService,
+      private sharedService: SharedService) {}
 }
