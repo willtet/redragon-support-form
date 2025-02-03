@@ -80,7 +80,7 @@
     <div class="step_container">
       <div class="step_container_label">
         <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
-        <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+        <p>Dificuldade ao localizar a etiqueta? <u><a (click)="openInfoDialog()">clique aqui</a></u></p>
       </div>
       <div class="step_container_textarea">
         <form class="step_container_content__form from_textarea" [formGroup]="garantiaForm4">
@@ -116,6 +116,9 @@
           <div *ngIf="fileLimitExceeded && fotos.length >= 3" class="file-limit-message">
             <p>Você atingiu o limite máximo de 3 fotos.</p>
           </div>
+          <div *ngIf="garantiaForm4.get('fotos')?.errors?.['noFiles']" class="file-error-message">
+            <p style="color: red;">Por favor, envie pelo menos uma foto.</p>
+          </div>
           <div class="step_container_content__form__button">
             <button class="step_container_content__form__button__back" mat-button matStepperPrevious>Voltar</button>
             <button class="step_container_content__form__button__next" mat-button matStepperNext>Enviar</button>
@@ -128,7 +131,6 @@
     <div class="step_container">
       <div class="step_container_label">
         <h2>Por favor, envie uma foto da Nota Fiscal do Produto</h2>
-        <p>Dificuldade ao localizar a nota? <a>clique aqui</a></p>
       </div>
       <div class="step_container_textarea">
         <form class="step_container_content__form from_textarea" [formGroup]="garantiaForm5">

@@ -38,7 +38,7 @@
     <div class="step_container">
       <div class="step_container_label">
         <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
-        <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+        <p>Dificuldade ao localizar a etiqueta? <u><a (click)="openInfoDialog()">clique aqui</a></u></p>
       </div>
       <div class="step_container_textarea">
         <form class="step_container_content__form from_textarea" [formGroup]="softwareForm2">
@@ -163,8 +163,7 @@
     <mat-step [stepControl]="softwareForm7">
       <div class="step_container">
         <div class="step_container_label">
-          <h2>Por favor, envie uma foto da etiqueta do produto para confirmarmos o modelo e lote da unidade</h2>
-          <p>Dificuldade ao localizar a etiqueta? <a>clique aqui</a></p>
+          <h2>Envie um print ou imagem do problema</h2>
         </div>
         <div class="step_container_textarea">
           <form class="step_container_content__form from_textarea" [formGroup]="softwareForm2">

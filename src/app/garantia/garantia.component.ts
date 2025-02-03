@@ -93,6 +93,7 @@ export class GarantiaComponent {
         if (this.allowedExtensions.includes(fileExtension || '')) {
           if (fileType === 'fotos') {
             this.fotos.push(droppedFile); // Adiciona à lista de fotos
+            this.garantiaForm4.get('fotos')?.setValue(this.fotos); // Update form control
           } else if (fileType === 'notaFiscal') {
             this.notaFiscal.push(droppedFile); // Adiciona à lista de nota fiscal
           }
@@ -166,6 +167,7 @@ export class GarantiaComponent {
   public removeFile(fileName: string, fileType: 'fotos' | 'notaFiscal'): void {
     if (fileType === 'fotos') {
       this.fotos = this.fotos.filter(file => file.relativePath !== fileName); // Remove o arquivo de fotos
+      this.garantiaForm4.get('fotos')?.setValue(this.fotos);
     } else if (fileType === 'notaFiscal') {
       this.notaFiscal = this.notaFiscal.filter(file => file.relativePath !== fileName); // Remove o arquivo de nota fiscal
     }
@@ -176,6 +178,11 @@ export class GarantiaComponent {
     }
 
     this.cdr.detectChanges(); // Atualiza a view
+  }
+
+
+  atLeastOneFile(control: any) {
+    return control.value && control.value.length > 0 ? null : { noFiles: true };
   }
 
 
@@ -196,7 +203,7 @@ export class GarantiaComponent {
   });
 
   garantiaForm4 = this._formBuilder.group({
-    fotos: ['']
+    fotos: this._formBuilder.control<NgxFileDropEntry[]>([], [this.atLeastOneFile])
   });
 
   garantiaForm5 = this._formBuilder.group({
